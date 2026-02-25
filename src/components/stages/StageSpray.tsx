@@ -15,6 +15,13 @@ const StageSpray = observer(() => {
               : styles.sprayMist
           }
         />
+        <div
+          className={
+            gameStore.spraying
+              ? `${styles.sprayJet} ${styles.sprayJetActive}`
+              : styles.sprayJet
+          }
+        />
         <div className={styles.sprayData}>
           <span className={styles.sprayPressure}>压力值：正常</span>
           <span className={styles.sprayMantra}>提 · 拔 · 握 · 压</span>
