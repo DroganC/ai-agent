@@ -1,7 +1,13 @@
 import { ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const tabs = [
+type BottomTab = {
+  to: string;
+  label: string;
+  icon: string;
+};
+
+const tabs: BottomTab[] = [
   { to: "/lobby", label: "大厅", icon: "🏠" },
   { to: "/leaderboard", label: "榜单", icon: "🏆" },
   { to: "/store", label: "商城", icon: "🛍️" },
@@ -30,6 +36,7 @@ export const PageShell = ({
   const location = useLocation();
 
   return (
+    // 移动端固定宽度容器，确保 H5 在企业容器与浏览器中显示一致。
     <div className="mobile-shell">
       <header className="top-header">
         <div className="top-header-left">

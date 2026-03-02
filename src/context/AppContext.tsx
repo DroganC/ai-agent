@@ -62,6 +62,7 @@ const STORAGE_SAFE_FALLBACK = buildInitialState();
 
 const AppContext = createContext<AppContextValue | null>(null);
 
+// 汇总员工能力指标：总分、累计最佳用时、通关数量等。
 const computeStats = (state: AppState): UserComputedStats => {
   const progressList = Object.values(state.progressByLevel);
   const passed = progressList.filter((item) => item.passCount > 0);
@@ -393,6 +394,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         let settledAttempt: LevelAttempt | null = null;
 
         patchState((prev) => {
+          // attempt 结算状态机：in_progress -> passed/failed/aborted
           const attempt = getAttemptOrThrow(prev, payload.attemptId);
           if (attempt.status !== "in_progress") {
             settledAttempt = attempt;
