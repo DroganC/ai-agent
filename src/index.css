@@ -1,8 +1,46 @@
 @import "tailwindcss";
 
+@theme {
+  /* Brand */
+  --color-brand: #0064ff;
+  --color-brand-50: #edf4ff;
+  --color-brand-100: #dbe9ff;
+  --color-brand-200: #b8d3ff;
+  --color-brand-700: #0053d6;
+  --color-brand-800: #003faa;
+
+  /* Semantic */
+  --color-danger: #ff2841;
+  --color-danger-50: #ffebee;
+  --color-danger-100: #ffd9df;
+  --color-danger-200: #ffbec8;
+  --color-danger-700: #d81f38;
+  --color-danger-800: #a51329;
+
+  --color-success: #22c55e;
+  --color-success-50: #eaf9f0;
+  --color-success-100: #d1f2de;
+  --color-success-700: #198d43;
+  --color-success-800: #136934;
+
+  --color-warning: #ffd673;
+  --color-warning-50: #fff8e5;
+  --color-warning-100: #ffefc6;
+  --color-warning-200: #ffe2a0;
+  --color-warning-700: #9b6b00;
+  --color-warning-800: #7c5500;
+}
+
 @layer base {
   :root {
     color-scheme: light;
+    --app-bg: #f2f6fb;
+    --app-bg-soft: #f8fbff;
+    --app-panel: #ffffff;
+    --app-line: #dbe4f0;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
   }
 
   /*
@@ -14,7 +52,9 @@
   }
 
   body {
-    @apply m-0 bg-slate-100 text-slate-900 antialiased;
+    @apply m-0 antialiased;
+    background: var(--app-bg);
+    color: var(--text-primary);
     font-family:
       "PingFang SC",
       "Hiragino Sans GB",
@@ -42,11 +82,13 @@
 
 @layer components {
   .mobile-shell {
-    @apply relative mx-auto min-h-screen w-full max-w-[26.875rem] bg-slate-50 shadow-[0_0_0_1px_rgba(148,163,184,0.15)];
+    @apply relative mx-auto min-h-screen w-full max-w-[26.875rem] shadow-[0_0_0_1px_rgba(148,163,184,0.15)];
+    background: var(--app-bg-soft);
   }
 
   .top-header {
-    @apply sticky top-0 z-20 grid h-[3.5rem] grid-cols-[3rem_1fr_4.25rem] items-center border-b border-slate-200 bg-slate-50/95 px-3 backdrop-blur-md;
+    @apply sticky top-0 z-20 grid h-[3.5rem] grid-cols-[3rem_1fr_4.25rem] items-center border-b bg-white/95 px-3 backdrop-blur-md;
+    border-color: var(--app-line);
   }
 
   .top-title {
@@ -74,7 +116,7 @@
 
   .icon-btn,
   .mini-btn {
-    @apply cursor-pointer rounded-[0.625rem] border-0 bg-blue-100 text-blue-900;
+    @apply cursor-pointer rounded-[0.625rem] border-0 bg-brand-100 text-brand-800;
   }
 
   .icon-btn {
@@ -98,15 +140,17 @@
   }
 
   .tab-bar {
-    @apply fixed bottom-0 left-1/2 grid w-full max-w-[26.875rem] -translate-x-1/2 grid-cols-5 gap-1 border-t border-slate-200 bg-white/90 p-1.5 backdrop-blur-md;
+    @apply fixed bottom-0 left-1/2 grid w-full max-w-[26.875rem] -translate-x-1/2 grid-cols-5 gap-1 border-t bg-white/90 p-1.5 backdrop-blur-md;
+    border-color: var(--app-line);
   }
 
   .tab-item {
-    @apply flex cursor-pointer flex-col items-center gap-0.5 rounded-[0.625rem] border-0 bg-transparent px-0 py-1.5 text-[0.75rem] text-slate-500;
+    @apply flex cursor-pointer flex-col items-center gap-0.5 rounded-[0.625rem] border-0 bg-transparent px-0 py-1.5 text-[0.75rem];
+    color: var(--text-muted);
   }
 
   .tab-item.active {
-    @apply bg-blue-50 font-bold text-blue-900 shadow-[inset_0_0_0_1px_rgba(59,130,246,0.2)];
+    @apply bg-brand-50 font-bold text-brand-800 shadow-[inset_0_0_0_1px_rgba(0,100,255,0.22)];
   }
 
   .scene-switcher {
@@ -114,15 +158,17 @@
   }
 
   .chip-btn {
-    @apply cursor-pointer rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[0.8125rem] text-slate-500;
+    @apply cursor-pointer rounded-full border bg-white px-3 py-1.5 text-[0.8125rem];
+    border-color: var(--app-line);
+    color: var(--text-muted);
   }
 
   .chip-btn.active {
-    @apply border-blue-300 bg-blue-50 text-blue-700;
+    @apply border-brand-200 bg-brand-50 text-brand-700;
   }
 
   .hero-card {
-    @apply rounded-[0.875rem] bg-gradient-to-br from-blue-600 to-blue-700 p-[0.875rem] text-white shadow-[0_10px_24px_rgba(37,99,235,0.25)];
+    @apply rounded-[0.875rem] bg-gradient-to-br from-brand to-brand-700 p-[0.875rem] text-white shadow-[0_10px_24px_rgba(0,100,255,0.24)];
   }
 
   .hero-card h2 {
@@ -134,11 +180,11 @@
   }
 
   .hero-card .hero-subtitle {
-    @apply text-[0.75rem] tracking-[0.02em] text-blue-100;
+    @apply text-[0.75rem] tracking-[0.02em] text-brand-100;
   }
 
   .hero-card.compact {
-    @apply bg-gradient-to-br from-teal-700 to-cyan-700 shadow-[0_10px_24px_rgba(14,116,144,0.22)];
+    @apply bg-gradient-to-br from-brand-700 to-brand-800 shadow-[0_10px_24px_rgba(0,83,214,0.26)];
   }
 
   .grid-two {
@@ -146,7 +192,8 @@
   }
 
   .info-card {
-    @apply flex flex-col gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-left;
+    @apply flex flex-col gap-1.5 rounded-xl border bg-white px-3 py-2.5 text-left;
+    border-color: var(--app-line);
   }
 
   button.info-card {
@@ -154,15 +201,18 @@
   }
 
   .info-card span {
-    @apply text-[0.75rem] text-slate-500;
+    @apply text-[0.75rem];
+    color: var(--text-muted);
   }
 
   .info-card strong {
-    @apply text-[1.1875rem] font-semibold text-slate-900;
+    @apply text-[1.1875rem] font-semibold;
+    color: var(--text-primary);
   }
 
   .section-card {
-    @apply rounded-[0.875rem] border border-slate-200 bg-white p-3 shadow-[0_4px_14px_rgba(15,23,42,0.03)];
+    @apply rounded-[0.875rem] border bg-white p-3 shadow-[0_4px_14px_rgba(15,23,42,0.03)];
+    border-color: var(--app-line);
   }
 
   .section-header {
@@ -175,15 +225,15 @@
 
   .tag,
   .status-pill {
-    @apply rounded-full bg-indigo-50 px-2 py-0.5 text-[0.75rem] text-indigo-700;
+    @apply rounded-full bg-brand-50 px-2 py-0.5 text-[0.75rem] text-brand-700;
   }
 
   .status-pill.locked {
-    @apply bg-slate-100 text-slate-500;
+    @apply bg-warning-50 text-warning-700;
   }
 
   .status-pill.open {
-    @apply bg-emerald-50 text-emerald-700;
+    @apply bg-success-50 text-success-700;
   }
 
   .level-list {
@@ -191,7 +241,8 @@
   }
 
   .level-card {
-    @apply rounded-[0.875rem] border border-slate-200 bg-white p-3;
+    @apply rounded-[0.875rem] border bg-white p-3;
+    border-color: var(--app-line);
   }
 
   .level-header {
@@ -203,11 +254,13 @@
   }
 
   .muted {
-    @apply my-1.5 text-[0.8125rem] leading-[1.45] text-slate-500;
+    @apply my-1.5 text-[0.8125rem] leading-[1.45];
+    color: var(--text-muted);
   }
 
   .scene-tip {
-    @apply text-[0.8125rem] text-slate-700;
+    @apply text-[0.8125rem];
+    color: var(--text-secondary);
   }
 
   .primary-btn,
@@ -217,11 +270,13 @@
   }
 
   .primary-btn {
-    @apply cursor-pointer border-0 bg-gradient-to-br from-blue-600 to-blue-700 font-semibold text-white shadow-[0_8px_18px_rgba(37,99,235,0.22)] hover:brightness-105 active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-70;
+    @apply cursor-pointer border-0 bg-gradient-to-br from-brand to-brand-700 font-semibold text-white shadow-[0_8px_18px_rgba(0,100,255,0.24)] hover:brightness-105 active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-70;
   }
 
   .ghost-btn {
-    @apply cursor-pointer border border-slate-300 bg-white text-slate-900 hover:bg-slate-50 active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-70;
+    @apply cursor-pointer border bg-white hover:bg-brand-50 active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-70;
+    border-color: #cbd5e1;
+    color: var(--text-primary);
   }
 
   .block-btn {
@@ -237,31 +292,35 @@
   }
 
   .option-btn {
-    @apply cursor-pointer border border-blue-200 bg-blue-50 text-blue-900 hover:bg-blue-100 active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-70;
+    @apply cursor-pointer border border-brand-200 bg-brand-50 text-brand-800 hover:bg-brand-100 active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-70;
   }
 
   .feedback-text {
-    @apply m-0 rounded-[0.625rem] bg-blue-50 px-2.5 py-2 text-[0.8125rem] text-blue-700;
+    @apply m-0 rounded-[0.625rem] bg-warning-50 px-2.5 py-2 text-[0.8125rem] text-warning-700;
   }
 
   .error-text {
-    @apply m-0 rounded-[0.625rem] bg-rose-50 px-2.5 py-2 text-[0.8125rem] text-rose-700;
+    @apply m-0 rounded-[0.625rem] bg-danger-50 px-2.5 py-2 text-[0.8125rem] text-danger-700;
   }
 
   .state-block {
-    @apply rounded-xl border border-dashed border-slate-300 bg-white px-3 py-4 text-center text-[0.875rem] text-slate-700;
+    @apply rounded-xl border border-dashed bg-white px-3 py-4 text-center text-[0.875rem];
+    border-color: #cbd5e1;
+    color: var(--text-secondary);
   }
 
   .state-block.error {
-    @apply border-rose-200 bg-rose-50 text-rose-700;
+    @apply border-danger-200 bg-danger-50 text-danger-700;
   }
 
   .ordered-list {
-    @apply m-0 list-decimal pl-[1.125rem] text-[0.875rem] leading-[1.6] text-slate-700;
+    @apply m-0 list-decimal pl-[1.125rem] text-[0.875rem] leading-[1.6];
+    color: var(--text-secondary);
   }
 
   .result-card {
-    @apply rounded-[0.875rem] border border-slate-200 bg-white p-[0.875rem];
+    @apply rounded-[0.875rem] border bg-white p-[0.875rem];
+    border-color: var(--app-line);
   }
 
   .result-card h2 {
@@ -269,7 +328,8 @@
   }
 
   .result-card p {
-    @apply my-1.5 text-[0.875rem] text-slate-700;
+    @apply my-1.5 text-[0.875rem];
+    color: var(--text-secondary);
   }
 
   .result-badge {
@@ -277,11 +337,11 @@
   }
 
   .result-badge.pass {
-    @apply bg-emerald-100 text-emerald-800;
+    @apply bg-success-100 text-success-800;
   }
 
   .result-badge.fail {
-    @apply bg-rose-100 text-rose-800;
+    @apply bg-danger-100 text-danger-800;
   }
 
   .timeline,
@@ -290,23 +350,27 @@
   }
 
   .timeline li {
-    @apply ml-[0.3125rem] border-l-2 border-slate-300 pl-2.5 pb-2.5;
+    @apply ml-[0.3125rem] border-l-2 pl-2.5 pb-2.5;
+    border-left-color: #cbd5e1;
   }
 
   .timeline li span {
-    @apply text-[0.75rem] text-slate-500;
+    @apply text-[0.75rem];
+    color: var(--text-muted);
   }
 
   .timeline li p {
-    @apply mt-[0.3125rem] text-[0.8125rem] text-slate-900;
+    @apply mt-[0.3125rem] text-[0.8125rem];
+    color: var(--text-primary);
   }
 
   .rank-list li {
-    @apply grid grid-cols-[2.75rem_1fr_auto] items-center gap-2 border-b border-slate-200 py-2.5;
+    @apply grid grid-cols-[2.75rem_1fr_auto] items-center gap-2 border-b py-2.5;
+    border-color: var(--app-line);
   }
 
   .rank-list li.mine {
-    @apply rounded-lg bg-blue-50/70;
+    @apply rounded-lg bg-brand-50/80;
   }
 
   .rank-score {
@@ -318,7 +382,8 @@
   }
 
   .rank-score small {
-    @apply text-[0.75rem] text-slate-500;
+    @apply text-[0.75rem];
+    color: var(--text-muted);
   }
 
   .my-rank-row {
@@ -326,11 +391,11 @@
   }
 
   .my-rank-row strong {
-    @apply text-[1.5rem] font-bold text-blue-700;
+    @apply text-[1.5rem] font-bold text-brand-700;
   }
 
   .timer-chip {
-    @apply rounded-full bg-blue-100 px-2 py-1 text-[0.75rem] text-blue-700;
+    @apply rounded-full bg-brand-100 px-2 py-1 text-[0.75rem] text-brand-700;
   }
 
   .login-page {
@@ -338,23 +403,26 @@
   }
 
   .login-card {
-    @apply w-full max-w-[26.875rem] rounded-2xl border border-slate-200 bg-white p-[1.125rem] shadow-[0_16px_34px_rgba(15,23,42,0.08)];
+    @apply w-full max-w-[26.875rem] rounded-2xl border bg-white p-[1.125rem] shadow-[0_16px_34px_rgba(15,23,42,0.08)];
+    border-color: var(--app-line);
   }
 
   .login-card h1 {
-    @apply my-1.5 mb-2.5 text-[1.25rem] font-semibold text-slate-900;
+    @apply my-1.5 mb-2.5 text-[1.25rem] font-semibold;
+    color: var(--text-primary);
   }
 
   .login-card p {
-    @apply my-2 text-[0.875rem] leading-[1.5] text-slate-700;
+    @apply my-2 text-[0.875rem] leading-[1.5];
+    color: var(--text-secondary);
   }
 
   .brand {
-    @apply text-[0.8125rem] text-blue-700;
+    @apply text-[0.8125rem] text-brand-700;
   }
 
   .loading-dot {
-    @apply text-[0.8125rem] text-blue-700;
+    @apply text-[0.8125rem] text-brand-700;
   }
 
   .login-actions {
@@ -371,14 +439,17 @@
 
   .form-grid input,
   .form-grid textarea {
-    @apply w-full rounded-[0.625rem] border border-slate-300 bg-white px-3 py-2.5 text-[0.875rem] outline-none transition-colors duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100;
+    @apply w-full rounded-[0.625rem] border bg-white px-3 py-2.5 text-[0.875rem] outline-none transition-colors duration-200 focus:border-brand focus:ring-2 focus:ring-brand-100;
+    border-color: #cbd5e1;
   }
 
   .switch-line {
-    @apply inline-flex items-center gap-2 text-[0.8125rem] text-slate-700;
+    @apply inline-flex items-center gap-2 text-[0.8125rem];
+    color: var(--text-secondary);
   }
 
   .poster-preview {
-    @apply w-full rounded-xl border border-slate-300;
+    @apply w-full rounded-xl border;
+    border-color: #cbd5e1;
   }
 }

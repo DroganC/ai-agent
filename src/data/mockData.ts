@@ -27,7 +27,7 @@ export const mockUser: UserProfile = {
   departmentName: "运营一部",
   baseId: "B-SH-01",
   baseName: "上海基地",
-  avatarColor: "#3b82f6",
+  avatarColor: "#0064ff",
 };
 
 export const mockScenes: Scene[] = [
