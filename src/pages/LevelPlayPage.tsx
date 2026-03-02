@@ -1,12 +1,22 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { PageShell } from "../components/PageShell";
-import { InteractionMode, InteractionOutcome, LevelArena } from "../components/interactive/LevelArena";
+import type { InteractionMode, InteractionOutcome } from "../components/interactive/LevelArena";
 import { useApp } from "../context/AppContext";
 import { LevelStep } from "../types/domain";
 import { clamp, formatDuration } from "../utils/helpers";
 
+const LevelArena = lazy(async () => {
+  const module = await import("../components/interactive/LevelArena");
+  return { default: module.LevelArena };
+});
+
 const interactionModes: InteractionMode[] = ["timing", "drag", "sequence"];
+const interactionModeLabel: Record<InteractionMode, string> = {
+  timing: "节奏锁定",
+  drag: "拖拽校准",
+  sequence: "流程激活",
+};
 
 const pickOptionByOutcome = (step: LevelStep, outcome: InteractionOutcome) => {
   const correct = step.options.find((option) => option.isCorrect);
@@ -165,10 +175,12 @@ export const LevelPlayPage = () => {
         <div className="section-card">
           <header className="section-header">
             <h3>{step.title}</h3>
-            <span className="tag">模式：{interactionMode}</span>
+            <span className="tag">模式：{interactionModeLabel[interactionMode]}</span>
           </header>
           <p className="muted">知识点：{step.knowledgePoint}</p>
-          <LevelArena step={step} mode={interactionMode} busy={busy} onResolve={onResolveArena} />
+          <Suspense fallback={<div className="state-block">正在加载 Phaser 场景...</div>}>
+            <LevelArena step={step} mode={interactionMode} busy={busy} onResolve={onResolveArena} />
+          </Suspense>
         </div>
       ) : null}
 
