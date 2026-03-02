@@ -1,0 +1,30 @@
+@theme {
+  /* Brand */
+  --color-brand: #0064ff;
+  --color-brand-50: #edf4ff;
+  --color-brand-100: #dbe9ff;
+  --color-brand-200: #b8d3ff;
+  --color-brand-700: #0053d6;
+  --color-brand-800: #003faa;
+
+  /* Semantic */
+  --color-danger: #ff2841;
+  --color-danger-50: #ffebee;
+  --color-danger-100: #ffd9df;
+  --color-danger-200: #ffbec8;
+  --color-danger-700: #d81f38;
+  --color-danger-800: #a51329;
+
+  --color-success: #22c55e;
+  --color-success-50: #eaf9f0;
+  --color-success-100: #d1f2de;
+  --color-success-700: #198d43;
+  --color-success-800: #136934;
+
+  --color-warning: #ffd673;
+  --color-warning-50: #fff8e5;
+  --color-warning-100: #ffefc6;
+  --color-warning-200: #ffe2a0;
+  --color-warning-700: #9b6b00;
+  --color-warning-800: #7c5500;
+}

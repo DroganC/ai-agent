@@ -1,0 +1,49 @@
+@layer base {
+  :root {
+    color-scheme: light;
+    --radius-base: 4px;
+    --app-bg: #f2f6fb;
+    --app-bg-soft: #f8fbff;
+    --app-panel: #ffffff;
+    --app-line: #dbe4f0;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+  }
+
+  /*
+   * rem 响应式基准：
+   * 375px 视口约等于 16px；小屏不低于 14px，大屏不高于 18px。
+   */
+  html {
+    font-size: clamp(14px, 4.2667vw, 18px);
+  }
+
+  body {
+    @apply m-0 antialiased;
+    background: var(--app-bg);
+    color: var(--text-primary);
+    font-family:
+      "PingFang SC",
+      "Hiragino Sans GB",
+      "Microsoft YaHei",
+      -apple-system,
+      BlinkMacSystemFont,
+      sans-serif;
+  }
+
+  #root {
+    @apply min-h-screen;
+  }
+
+  a {
+    @apply no-underline;
+  }
+
+  button,
+  input,
+  textarea,
+  a {
+    font: inherit;
+  }
+}

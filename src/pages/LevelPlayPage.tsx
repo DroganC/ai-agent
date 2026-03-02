@@ -1,8 +1,31 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { PageShell } from "../components/PageShell";
+import { InteractionMode, InteractionOutcome, LevelArena } from "../components/interactive/LevelArena";
 import { useApp } from "../context/AppContext";
+import { LevelStep } from "../types/domain";
 import { clamp, formatDuration } from "../utils/helpers";
+
+const interactionModes: InteractionMode[] = ["timing", "drag", "sequence"];
+
+const pickOptionByOutcome = (step: LevelStep, outcome: InteractionOutcome) => {
+  const correct = step.options.find((option) => option.isCorrect);
+  const wrongOptions = step.options.filter((option) => !option.isCorrect);
+
+  if (!correct && wrongOptions.length > 0) {
+    return wrongOptions[0].id;
+  }
+
+  if (outcome === "success" || wrongOptions.length === 0) {
+    return (correct ?? step.options[0]).id;
+  }
+
+  const selectedWrong =
+    outcome === "critical"
+      ? wrongOptions.find((option) => option.isKeyError) ?? wrongOptions[0]
+      : wrongOptions.find((option) => !option.isKeyError) ?? wrongOptions[0];
+  return selectedWrong.id;
+};
 
 export const LevelPlayPage = () => {
   const { levelId: levelIdParam, attemptId } = useParams();
@@ -76,6 +99,7 @@ export const LevelPlayPage = () => {
 
   const step = level.steps[currentStep];
   const progressText = `${currentStep + 1}/${level.steps.length}`;
+  const interactionMode = interactionModes[(level.id + currentStep) % interactionModes.length];
 
   const onChooseOption = async (optionId: string) => {
     if (!step || busy) return;
@@ -111,6 +135,16 @@ export const LevelPlayPage = () => {
     }
   };
 
+  /**
+   * 互动关卡只产出“成功/失败/严重失败”结果，
+   * 再映射到当前步骤配置的 option，从而复用现有判分和结算链路。
+   */
+  const onResolveArena = async (outcome: InteractionOutcome) => {
+    if (!step) return;
+    const optionId = pickOptionByOutcome(step, outcome);
+    await onChooseOption(optionId);
+  };
+
   return (
     <PageShell
       title="关卡进行中"
@@ -131,23 +165,10 @@ export const LevelPlayPage = () => {
         <div className="section-card">
           <header className="section-header">
             <h3>{step.title}</h3>
+            <span className="tag">模式：{interactionMode}</span>
           </header>
-          <p className="muted">{step.description}</p>
           <p className="muted">知识点：{step.knowledgePoint}</p>
-
-          <div className="option-list">
-            {step.options.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                className="option-btn"
-                disabled={busy}
-                onClick={() => void onChooseOption(option.id)}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
+          <LevelArena step={step} mode={interactionMode} busy={busy} onResolve={onResolveArena} />
         </div>
       ) : null}
 
