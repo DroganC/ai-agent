@@ -3,6 +3,13 @@ import { PageShell } from "../components/PageShell";
 import { useApp } from "../context/AppContext";
 import { formatDateTime, formatDuration } from "../utils/helpers";
 
+const rankIcon = (rank: number) => {
+  if (rank === 1) return "🥇";
+  if (rank === 2) return "🥈";
+  if (rank === 3) return "🥉";
+  return `#${rank}`;
+};
+
 export const LeaderboardPage = () => {
   const { state, leaderboard, myRank, actions } = useApp();
   const [loading, setLoading] = useState(false);
@@ -58,11 +65,11 @@ export const LeaderboardPage = () => {
         <header className="section-header">
           <h3>榜单</h3>
         </header>
-        <ul className="rank-list">
+        <ul className="rank-list compact">
           {leaderboard.slice(0, 50).map((entry, index) => (
             <li key={`${entry.userId}-${index}`} className={entry.userId === state.currentUser?.id ? "mine" : ""}>
-              <span>#{index + 1}</span>
-              <div>
+              <span className={`rank-badge ${index < 3 ? `top${index + 1}` : ""}`}>{rankIcon(index + 1)}</span>
+              <div className="rank-meta">
                 <p>{entry.userName}</p>
                 <p className="muted">
                   {entry.departmentName} · {entry.baseName}

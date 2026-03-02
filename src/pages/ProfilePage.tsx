@@ -1,11 +1,11 @@
-import { useMemo, useState } from "react";
+import { CSSProperties, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageShell } from "../components/PageShell";
 import { useApp } from "../context/AppContext";
 import { formatDateTime, formatDuration } from "../utils/helpers";
 
 export const ProfilePage = () => {
-  const { state, stats, actions } = useApp();
+  const { state, stats, actions, myRank } = useApp();
   const navigate = useNavigate();
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState(false);
@@ -25,6 +25,23 @@ export const ProfilePage = () => {
   );
 
   const reviveRemain = Math.max(state.reviveCounter.maxPerDay - state.reviveCounter.reviveCount, 0);
+  const totalLevels = state.levels.filter((item) => item.status === 1).length;
+  const passRatio = totalLevels > 0 ? Math.round((stats.passLevelCount / totalLevels) * 100) : 0;
+  const lifeRatio = Math.round((state.lifeAccount.lifeCount / 3) * 100);
+  const reviveRatio = Math.round((reviveRemain / state.reviveCounter.maxPerDay) * 100);
+  const nextPointMilestone = Math.max(100, Math.ceil((state.pointAccount.balance + 1) / 100) * 100);
+  const pointRatio = Math.min(100, Math.round((state.pointAccount.balance / nextPointMilestone) * 100));
+
+  const scoreVisualStyle = useMemo(
+    () =>
+      ({
+        background: `conic-gradient(var(--color-brand) ${Math.min(
+          360,
+          Math.max(20, stats.totalScore * 3),
+        )}deg, #dbe9ff 0deg)`,
+      }) as CSSProperties,
+    [stats.totalScore],
+  );
 
   const onRevive = async (type: "task" | "points") => {
     try {
@@ -51,26 +68,94 @@ export const ProfilePage = () => {
         </p>
       </div>
 
-      <div className="grid-two">
-        <div className="info-card">
-          <span>累计通关</span>
-          <strong>{stats.passLevelCount}</strong>
+      <div className="profile-visual-board">
+        <div className="profile-score-ring" style={scoreVisualStyle}>
+          <div className="profile-score-core">
+            <span>总分</span>
+            <strong>{stats.totalScore}</strong>
+          </div>
         </div>
-        <div className="info-card">
-          <span>总分</span>
-          <strong>{stats.totalScore}</strong>
+        <div className="profile-kpi-stack">
+          <div className="profile-kpi-card">
+            <span>当前排名</span>
+            <strong>{myRank > 0 ? `#${myRank}` : "未上榜"}</strong>
+          </div>
+          <div className="profile-kpi-card">
+            <span>累计通关</span>
+            <strong>
+              {stats.passLevelCount}/{totalLevels}
+            </strong>
+          </div>
+          <div className="profile-kpi-card">
+            <span>最佳用时</span>
+            <strong>
+              {Number.isFinite(stats.bestDurationMs) && stats.bestDurationMs < Number.MAX_SAFE_INTEGER
+                ? formatDuration(stats.bestDurationMs)
+                : "--:--"}
+            </strong>
+          </div>
         </div>
-        <div className="info-card">
-          <span>最佳用时</span>
-          <strong>
-            {Number.isFinite(stats.bestDurationMs) && stats.bestDurationMs < Number.MAX_SAFE_INTEGER
-              ? formatDuration(stats.bestDurationMs)
-              : "--:--"}
-          </strong>
+      </div>
+
+      <div className="section-card">
+        <header className="section-header">
+          <h3>能力进度总览</h3>
+          <span className="tag">可视化追踪</span>
+        </header>
+        <div className="profile-progress-list">
+          <div className="profile-progress-item">
+            <div className="profile-progress-head">
+              <span>关卡完成度</span>
+              <strong>{passRatio}%</strong>
+            </div>
+            <div className="profile-progress-rail">
+              <div className="profile-progress-fill" style={{ width: `${passRatio}%` }} />
+            </div>
+          </div>
+
+          <div className="profile-progress-item">
+            <div className="profile-progress-head">
+              <span>生命状态</span>
+              <strong>{state.lifeAccount.lifeCount}/3</strong>
+            </div>
+            <div className="profile-progress-rail warning">
+              <div className="profile-progress-fill warning" style={{ width: `${lifeRatio}%` }} />
+            </div>
+          </div>
+
+          <div className="profile-progress-item">
+            <div className="profile-progress-head">
+              <span>复活额度</span>
+              <strong>{reviveRemain}/{state.reviveCounter.maxPerDay}</strong>
+            </div>
+            <div className="profile-progress-rail danger">
+              <div className="profile-progress-fill danger" style={{ width: `${reviveRatio}%` }} />
+            </div>
+          </div>
+
+          <div className="profile-progress-item">
+            <div className="profile-progress-head">
+              <span>积分里程碑</span>
+              <strong>
+                {state.pointAccount.balance}/{nextPointMilestone}
+              </strong>
+            </div>
+            <div className="profile-progress-rail">
+              <div className="profile-progress-fill" style={{ width: `${pointRatio}%` }} />
+            </div>
+          </div>
         </div>
-        <div className="info-card">
-          <span>当前积分</span>
-          <strong>{state.pointAccount.balance}</strong>
+      </div>
+
+      <div className="section-card">
+        <header className="section-header">
+          <h3>荣誉徽章</h3>
+        </header>
+        <div className="profile-badge-list">
+          <span className={`profile-badge ${stats.passLevelCount >= 1 ? "active" : ""}`}>🎯 首次通关</span>
+          <span className={`profile-badge ${stats.passLevelCount >= 3 ? "active" : ""}`}>🔥 连续精进</span>
+          <span className={`profile-badge ${stats.totalScore >= 300 ? "active" : ""}`}>🏅 高分达人</span>
+          <span className={`profile-badge ${state.pointAccount.balance >= 200 ? "active" : ""}`}>💎 积分达人</span>
         </div>
       </div>
 
