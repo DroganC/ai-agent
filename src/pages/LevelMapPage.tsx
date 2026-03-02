@@ -49,7 +49,7 @@ export const LevelMapPage = () => {
         ))}
       </div>
 
-      <div className="level-list">
+      <div className="level-grid-two">
         {levels.map((level) => {
           const progress = state.progressByLevel[level.id];
           const locked = progress.unlockStatus === 0;
@@ -59,7 +59,7 @@ export const LevelMapPage = () => {
           const statusLabel = locked ? "未解锁" : progress.passCount > 0 ? "已通关" : "可挑战";
 
           return (
-            <article key={level.id} className="level-card">
+            <article key={level.id} className="level-card level-map-card">
               <div className="level-header">
                 <h3>{level.name}</h3>
                 <span className={`status-pill ${locked ? "locked" : "open"}`}>{statusLabel}</span>
@@ -77,7 +77,7 @@ export const LevelMapPage = () => {
 
               <button
                 type="button"
-                className={`primary-btn block-btn ${locked ? "disabled" : ""}`}
+                className={`primary-btn block-btn map-card-btn ${locked ? "disabled" : ""}`}
                 onClick={() => {
                   if (locked) {
                     window.alert(`请先通关：${prevLevel?.name ?? "前置关卡"}`);

@@ -26,7 +26,14 @@
       .arena-card,
       .phaser-arena-wrap,
       .phaser-arena-canvas,
-      .arena-hint
+      .arena-hint,
+      .lobby-gradient-panel,
+      .lobby-scene-badge,
+      .lobby-energy-rail,
+      .lobby-energy-fill,
+      .lobby-entry-card,
+      .level-map-card,
+      .map-card-btn
     ) {
     border-radius: var(--radius-base);
   }
@@ -138,6 +145,59 @@
     @apply bg-gradient-to-br from-brand-700 to-brand-800 shadow-[0_10px_24px_rgba(0,83,214,0.26)];
   }
 
+  .lobby-gradient-panel {
+    @apply border border-white/20 bg-cover bg-center p-3 text-white shadow-[0_16px_36px_rgba(0,83,214,0.32)];
+  }
+
+  .lobby-gradient-top {
+    @apply mb-1.5 flex items-start justify-between gap-2;
+  }
+
+  .lobby-scene-badge {
+    @apply border border-white/35 bg-white/20 px-1.5 py-0.5 text-[0.6875rem] font-semibold tracking-[0.08em];
+  }
+
+  .lobby-user-meta {
+    @apply mb-2 text-[0.8125rem] text-white/95;
+  }
+
+  .lobby-energy-wrap {
+    @apply bg-white/18 p-2 backdrop-blur-sm;
+  }
+
+  .lobby-energy-head {
+    @apply mb-1 flex items-center justify-between text-[0.75rem];
+  }
+
+  .lobby-energy-rail {
+    @apply h-[0.5rem] overflow-hidden bg-white/35;
+  }
+
+  .lobby-energy-fill {
+    @apply h-full bg-gradient-to-r from-success to-warning;
+  }
+
+  .lobby-entry-grid {
+    @apply grid grid-cols-2 gap-2.5;
+  }
+
+  .lobby-entry-card {
+    @apply flex cursor-pointer items-center gap-2 border border-brand-100 bg-gradient-to-br from-brand-50 to-white px-2.5 py-2 text-left shadow-[0_8px_20px_rgba(0,100,255,0.09)] transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_10px_24px_rgba(0,100,255,0.14)] active:translate-y-0;
+  }
+
+  .lobby-entry-card > span {
+    @apply text-[1.125rem];
+  }
+
+  .lobby-entry-card strong {
+    @apply block text-[0.8125rem] font-semibold text-brand-800;
+  }
+
+  .lobby-entry-card p {
+    @apply mt-0.5 text-[0.6875rem];
+    color: var(--text-muted);
+  }
+
   .grid-two {
     @apply grid grid-cols-2 gap-2.5;
   }
@@ -194,6 +254,22 @@
   .level-card {
     @apply border bg-white p-3;
     border-color: var(--app-line);
+  }
+
+  .level-grid-two {
+    @apply grid grid-cols-2 gap-2.5;
+  }
+
+  .level-map-card {
+    @apply flex min-h-[13.375rem] flex-col justify-between bg-gradient-to-b from-white to-brand-50/40 shadow-[0_8px_22px_rgba(15,23,42,0.05)];
+  }
+
+  .level-map-card .level-header h3 {
+    @apply line-clamp-2 min-h-[2.5rem] text-[0.875rem];
+  }
+
+  .map-card-btn {
+    @apply mt-1.5 py-2 text-[0.75rem];
   }
 
   .level-header {
