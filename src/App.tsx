@@ -1,23 +1,62 @@
-import { observer } from "mobx-react-lite";
-import styles from "./app.module.css";
-import { gameStore } from "./store/gameStore";
-import IntroScreen from "./components/IntroScreen";
-import GameScreen from "./components/GameScreen";
-import ResultScreen from "./components/ResultScreen";
+import { useEffect, useState, Suspense } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthGuard } from './components/common/AuthGuard';
+import { Loading } from './components/common/Loading';
+import { LoginCallback } from './pages/LoginCallback';
+import { Hall } from './pages/Hall';
+import { Leaderboard } from './pages/Leaderboard';
+import { Profile } from './pages/Profile';
+import { Levels } from './pages/Levels';
+import { LevelPrepare } from './pages/LevelPrepare';
+import { LevelPlay } from './pages/LevelPlay';
+import { Settlement } from './pages/Settlement';
+import { Store } from './pages/Store';
+import { StoreOrders } from './pages/StoreOrders';
+import { Learning } from './pages/Learning';
 
-const App = observer(() => {
+const USE_MOCK = (import.meta.env.VITE_USE_MOCK ?? 'true') !== 'false';
+
+function App() {
+  const [mockReady, setMockReady] = useState(!USE_MOCK);
+
+  useEffect(() => {
+    // Dev default uses MSW. In production, VITE_USE_MOCK should be false.
+    if (USE_MOCK) {
+      import('./mocks/browser').then(({ startMock }) => startMock().finally(() => setMockReady(true)));
+    }
+  }, []);
+
+  if (!mockReady) return <Loading text="启动 Mock" />;
+
   return (
-    <div className={styles.appShell}>
-      <header className={styles.header}>
-        <div className={styles.logo}>消防小课堂</div>
-        <div className={styles.badge}>提 拔 握 压</div>
-      </header>
-
-      {gameStore.screen === "intro" && <IntroScreen />}
-      {gameStore.screen === "game" && <GameScreen />}
-      {gameStore.screen === "result" && <ResultScreen />}
-    </div>
+    <BrowserRouter>
+      <Suspense fallback={<Loading />}>
+        <Routes>
+          <Route path="/login-callback" element={<LoginCallback />} />
+          <Route
+            path="/*"
+            element={
+              <AuthGuard>
+                <Routes>
+                  <Route path="hall" element={<Hall />} />
+                  <Route path="leaderboard" element={<Leaderboard />} />
+                  <Route path="profile" element={<Profile />} />
+                  <Route path="levels" element={<Levels />} />
+                  <Route path="level/:id/prepare" element={<LevelPrepare />} />
+                  <Route path="level/:id/play" element={<LevelPlay />} />
+                  <Route path="level/:id/settlement" element={<Settlement />} />
+                  <Route path="store" element={<Store />} />
+                  <Route path="store/orders" element={<StoreOrders />} />
+                  <Route path="learning" element={<Learning />} />
+                  <Route path="*" element={<Navigate to="/hall" replace />} />
+                </Routes>
+              </AuthGuard>
+            }
+          />
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
   );
-});
+}
 
 export default App;
