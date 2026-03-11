@@ -74,7 +74,7 @@ button {
 .stack {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .row {
@@ -283,4 +283,426 @@ button {
   display: flex;
   gap: var(--space-2);
   flex-wrap: wrap;
+}
+
+/* ===== 场景与关卡页：柔和布局与卡片列表 ===== */
+.levels-page {
+  padding-bottom: var(--space-6);
+}
+.levels-page .row:first-child {
+  min-height: 0.72rem;
+  align-items: center;
+}
+.levels-page .actionPill {
+  width: 0.72rem !important;
+  height: 0.72rem !important;
+  min-width: 0.72rem;
+  min-height: 0.72rem;
+}
+/* 分类 + 搜索合并为一块，统一圆角、背景与阴影 */
+.levels-filter-block {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-1);
+  border: 1px solid var(--wire-soft);
+  overflow: hidden;
+  padding: var(--space-3);
+}
+.levels-filter-block .levels-scene-filter__row {
+  padding: 0;
+  margin-bottom: var(--space-2);
+  min-height: 0.56rem;
+  align-items: center;
+}
+.levels-filter-block .levels-scene-filter__row + .levels-search-inner {
+  border-top: none;
+  padding-top: var(--space-2);
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+}
+.levels-search-inner {
+  min-height: 0.88rem;
+}
+.levels-search-inner .adm-search-bar {
+  --border-radius: var(--radius-sm);
+  --background: var(--color-card);
+  min-height: 0.88rem;
+  background: var(--color-card) !important;
+}
+.levels-search-inner .adm-search-bar .adm-search-bar-input-box {
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+}
+.levels-filter-block .adm-tag {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-caption);
+  line-height: 1.35;
+}
+/* 学习中心等单独使用场景分类时保留原样式 */
+.levels-scene-filter {
+  margin-bottom: 0;
+  padding: var(--space-2) var(--space-3);
+}
+.levels-scene-filter > div {
+  min-height: 0.56rem;
+  align-items: center;
+}
+.levels-scene-filter .adm-tag {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-caption);
+  line-height: 1.35;
+}
+.levels-list-section {
+  margin-bottom: 0;
+}
+.levels-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.levels-empty {
+  text-align: center;
+  padding: var(--space-4) 0;
+  font-size: var(--font-caption);
+  color: var(--color-text-muted);
+}
+
+/* ===== 排行榜页：与关卡列表统一的圆角与间距 ===== */
+.rank-page {
+  padding-bottom: var(--space-6);
+}
+.rank-page .stack {
+  gap: var(--space-2);
+}
+.rank-scope-block {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-1);
+  border: 1px solid var(--wire-soft);
+  padding: var(--space-3);
+}
+.rank-scope-block .row {
+  margin: 0;
+}
+.rank-scope-block .chipGroup {
+  border-radius: var(--radius-sm);
+}
+.rank-list-card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-1);
+  border: 1px solid var(--wire-soft);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: 0;
+}
+.rank-list-card .sectionCardList__item {
+  padding: var(--space-2) 0;
+  gap: var(--space-3);
+}
+.rank-list-card .sectionCardList__item:last-child {
+  padding-bottom: 0;
+}
+.rank-updated {
+  padding: var(--space-2) 0;
+  text-align: center;
+  font-size: var(--font-caption);
+}
+.rank-row__left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+.rank-row__badge {
+  width: 0.64rem;
+  height: 0.64rem;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-caption);
+  font-weight: 700;
+  flex: 0 0 auto;
+  background: rgba(107, 114, 128, 0.1);
+  color: var(--color-text-muted);
+}
+.rank-row__badge--top3 {
+  font-weight: 900;
+  background: rgba(0, 100, 255, 0.12);
+  color: var(--color-primary);
+}
+.rank-row__info {
+  min-width: 0;
+}
+.rank-row__name {
+  font-size: var(--font-body);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.35;
+}
+.rank-row__name--me {
+  font-weight: 900;
+  color: var(--color-primary);
+}
+.rank-row__dept {
+  margin-top: var(--space-1);
+}
+.rank-row__right {
+  width: 2.2rem;
+  flex: 0 0 auto;
+  text-align: right;
+  font-size: var(--font-caption);
+  color: var(--color-text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: flex-end;
+}
+.rank-row__score {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-text);
+}
+.rank-row__score > *:first-child {
+  color: var(--color-primary);
+}
+.rank-row__duration {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* 关卡卡片：层次清晰、留白舒适、易于点击 */
+.level-card {
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  box-shadow: 0 2px 8px rgba(17, 24, 39, 0.06);
+  border: 1px solid var(--wire-soft);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.level-card:active {
+  box-shadow: 0 4px 12px rgba(17, 24, 39, 0.08);
+  border-color: rgba(0, 100, 255, 0.15);
+}
+.level-card--locked {
+  opacity: 0.9;
+}
+.level-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.level-card__title {
+  font-size: var(--font-body);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.4;
+  flex: 1;
+  min-width: 0;
+}
+.level-card__status {
+  flex: 0 0 auto !important;
+  border-radius: 999px !important;
+  font-size: 0.26rem !important;
+  padding: 2px 6px !important;
+}
+.level-card__belong {
+  font-size: var(--font-caption);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  margin-bottom: var(--space-2);
+  padding: var(--space-1) 0;
+  border-bottom: 1px solid var(--wire-soft);
+}
+.level-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--space-2);
+  margin-bottom: var(--space-3);
+  font-size: var(--font-caption);
+  color: var(--color-text-muted);
+}
+.level-card__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.level-card__meta-sep {
+  width: 1px;
+  height: 0.28rem;
+  background: var(--color-line);
+  flex-shrink: 0;
+}
+.level-card__footer {
+  margin-top: 0;
+}
+.level-card__footer .adm-button {
+  min-height: var(--btn-primary-height);
+  border-radius: var(--radius-btn);
+}
+.level-card__btn-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* 场景/模块筛选行：柔和标签 + 横向滚动胶囊 */
+.filter-row {
+  margin-bottom: var(--space-1);
+}
+.filter-row__label {
+  font-size: var(--font-caption);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.filter-row__scroll {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding-bottom: var(--space-1);
+  -webkit-overflow-scrolling: touch;
+}
+.filter-row__scroll::-webkit-scrollbar {
+  height: 2px;
+}
+.filter-pill {
+  flex: 0 0 auto;
+  padding: var(--space-2) var(--space-4);
+  border-radius: 999px;
+  font-size: var(--font-caption);
+  font-weight: 600;
+  border: 1px solid var(--wire-soft);
+  background: var(--color-card);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.filter-pill:hover {
+  background: rgba(0, 100, 255, 0.06);
+  color: var(--color-text);
+}
+.filter-pill--active {
+  background: rgba(0, 100, 255, 0.12);
+  color: var(--color-primary);
+  border-color: rgba(0, 100, 255, 0.25);
+}
+
+/* 场景 → 模块 关联筛选：先选场景，再选该场景下的模块 */
+.filter-cascade {
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--wire-soft);
+  box-shadow: var(--shadow-1);
+  padding: var(--space-4);
+}
+.filter-cascade__section {
+  margin-bottom: var(--space-3);
+}
+.filter-cascade__section:last-child {
+  margin-bottom: 0;
+}
+.filter-cascade__label {
+  font-size: var(--font-caption);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2);
+}
+.filter-cascade__sublabel {
+  font-weight: 400;
+  color: var(--color-text-muted);
+  opacity: 0.9;
+}
+.filter-cascade__section .filter-row__scroll {
+  padding-bottom: 0;
+}
+
+/* ===== 游戏首页（介绍页） ===== */
+.game-intro {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100vh;
+  padding-bottom: calc(var(--btn-primary-height) + var(--space-4) * 2 + env(safe-area-inset-bottom));
+}
+.game-intro__scroll {
+  flex: 1;
+  overflow: auto;
+  padding: var(--space-4) var(--page-padding);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.game-intro__head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+.game-intro__title-wrap {
+  flex: 1;
+  min-width: 0;
+}
+.game-intro__title {
+  font-size: var(--font-h1);
+  font-weight: 900;
+  color: var(--color-text);
+  line-height: 1.25;
+  margin: 0;
+}
+.game-intro__block {
+  margin-top: 0;
+}
+/* 区块标题与内容区间距 */
+.game-intro__block .sectionTitle {
+  margin-bottom: var(--space-2);
+}
+.game-intro__card {
+  padding: var(--space-4);
+  margin-bottom: 0; /* 由 .game-intro__scroll gap 统一控制区块间距 */
+}
+.game-intro__card-text {
+  font-size: var(--font-body);
+  line-height: var(--line-h);
+  margin: 0;
+}
+.game-intro__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.game-intro__spacer {
+  min-height: var(--space-4);
+}
+.game-intro__bottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  background: var(--color-bg);
+  border-top: var(--hairline);
+  box-shadow: 0 -4px 12px rgba(17, 24, 39, 0.06);
+}
+.game-intro__btn-wrap {
+  flex: 1;
+  min-width: 0;
+}
+.game-intro__btn-wrap .adm-button {
+  width: 100%;
 }

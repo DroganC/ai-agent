@@ -4,6 +4,7 @@ import { Card, Space, Toast } from 'antd-mobile';
 import { Page } from '../../components/common/Page';
 import { Loading } from '../../components/common/Loading';
 import { ErrorView } from '../../components/common/ErrorView';
+import { PullToRefreshContainer } from '../../components/common/PullToRefreshContainer';
 import { Icon } from '../../icons';
 import { fetchScenes, fetchModules } from '../../services/scenes';
 import { fetchLevelsByModule } from '../../services/levels';
@@ -86,7 +87,7 @@ export function Home() {
         Toast.show({ content: '该游戏未解锁（示例逻辑）', duration: 1200 });
         return;
       }
-      navigate(`/game/${levelId}`);
+      navigate(`/level/${levelId}/prepare`);
     },
     [levels, navigate]
   );
@@ -100,7 +101,8 @@ export function Home() {
 
   return (
     <Page>
-      <Space direction="vertical" block style={{ padding: 'var(--page-padding) var(--page-padding) 0', gap: 'var(--space-3)' }}>
+      <PullToRefreshContainer onRefresh={load}>
+        <Space direction="vertical" block style={{ padding: 'var(--page-padding) var(--page-padding) 0', gap: 'var(--space-3)' }}>
         {/* 上半部：个人信息 + 个人看板 */}
         <div className="row">
           <div>
@@ -114,7 +116,7 @@ export function Home() {
           <button
             type="button"
             className="actionPill"
-            onClick={() => Toast.show({ content: '功能建设中：搜索/筛选', duration: 1200 })}
+            onClick={() => navigate('/levels', { state: { focusSearch: true } })}
             aria-label="搜索"
           >
             <Icon name="search" size={18} weight="bold" />
@@ -142,9 +144,9 @@ export function Home() {
             className="actionPill"
             onClick={() => navigate('/levels')}
             style={{ padding: '0 var(--space-3)', height: '0.7rem' }}
-            aria-label="场景与关卡"
+            aria-label="关卡列表"
           >
-            <span className="actionPillText">场景与关卡</span>
+            <span className="actionPillText">关卡列表</span>
             <Icon name="caretRight" size={16} weight="bold" />
           </button>
         </div>
@@ -167,6 +169,7 @@ export function Home() {
           ))}
         </div>
       </Space>
+      </PullToRefreshContainer>
     </Page>
   );
 }

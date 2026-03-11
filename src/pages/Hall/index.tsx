@@ -9,6 +9,7 @@ import { useStores } from '../../stores';
 import { Page } from '../../components/common/Page';
 import { Loading } from '../../components/common/Loading';
 import { ErrorView } from '../../components/common/ErrorView';
+import { PullToRefreshContainer } from '../../components/common/PullToRefreshContainer';
 import { Icon } from '../../icons';
 import { getErrorMessage } from '../../utils/error';
 import styles from './Hall.module.less';
@@ -23,31 +24,27 @@ export const Hall = observer(function Hall() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  /** 拉取用户信息与关卡列表（模块 1），并随 uiStore.scene 变化重新拉取 */
-  useEffect(() => {
-    const run = async (): Promise<void> => {
-      try {
-        setLoading(true);
-        await fetchMe();
-        const lv = await fetchLevelsByModule(1);
-        setLevels(lv);
-        setError(null);
-      } catch (e: unknown) {
-        setError(getErrorMessage(e, '加载失败'));
-      } finally {
-        setLoading(false);
-      }
-    };
-    const dispose = reaction(() => uiStore.scene, () => void run(), { fireImmediately: true });
-    return () => dispose();
-  }, [uiStore]);
-
-  const handleRetry = useCallback((): void => {
-    window.location.reload();
+  const load = useCallback(async (): Promise<void> => {
+    try {
+      setLoading(true);
+      await fetchMe();
+      const lv = await fetchLevelsByModule(1);
+      setLevels(lv);
+      setError(null);
+    } catch (e: unknown) {
+      setError(getErrorMessage(e, '加载失败'));
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
+  useEffect(() => {
+    const dispose = reaction(() => uiStore.scene, () => void load(), { fireImmediately: true });
+    return () => dispose();
+  }, [uiStore, load]);
+
   if (loading) return <Loading />;
-  if (error) return <ErrorView message={error} onRetry={handleRetry} />;
+  if (error) return <ErrorView message={error} onRetry={load} />;
 
   void authStore.user;
   const filteredLevels: Level[] = levels.filter((level) => level.name.toLowerCase().includes(search.toLowerCase()));
@@ -57,7 +54,8 @@ export const Hall = observer(function Hall() {
 
   return (
     <Page>
-      <div className={styles.wrap}>
+      <PullToRefreshContainer onRefresh={load}>
+        <div className={styles.wrap}>
         <div className={styles.topRow}>
           <div className={styles.title}>
             <span>训练概览</span>
@@ -161,6 +159,7 @@ export const Hall = observer(function Hall() {
           {recentTasks.length === 0 && <div style={{ padding: '10px 0', color: '#b5b5c7' }}>暂无训练</div>}
         </div>
       </div>
+      </PullToRefreshContainer>
     </Page>
   );
 });

@@ -6,6 +6,7 @@ import { Page } from '../../components/common/Page';
 import { Loading } from '../../components/common/Loading';
 import { ErrorView } from '../../components/common/ErrorView';
 import { PageHeader } from '../../components/common/PageHeader';
+import { PullToRefreshContainer } from '../../components/common/PullToRefreshContainer';
 import { OrderListItem } from './components/OrderListItem';
 
 /**
@@ -25,9 +26,10 @@ export const StoreOrders = observer(function StoreOrders() {
 
   return (
     <Page showTab={false}>
-      <div className="screen">
-        <div className="stack" style={{ gap: 'var(--space-3)' }}>
-          <PageHeader
+      <PullToRefreshContainer onRefresh={async () => { await storeOrdersStore.load(); }}>
+        <div className="screen">
+          <div className="stack" style={{ gap: 'var(--space-3)' }}>
+            <PageHeader
             title="兑换记录"
             subtitle="查看积分兑换历史"
             onBack={() => navigate(-1)}
@@ -45,8 +47,9 @@ export const StoreOrders = observer(function StoreOrders() {
               )}
             </ul>
           </div>
+          </div>
         </div>
-      </div>
+      </PullToRefreshContainer>
     </Page>
   );
 });

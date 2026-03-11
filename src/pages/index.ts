@@ -5,7 +5,6 @@
 export { Home } from './Home';
 export { Leaderboard } from './Leaderboard';
 export { Profile } from './Profile';
-export { GameIntro } from './GameIntro';
 export { GamePlay } from './GamePlay';
 export { Levels } from './Levels';
 export { LevelPrepare } from './LevelPrepare';

@@ -54,6 +54,6 @@ export function GamePlay() {
 
   return renderGame(type, {
     level: game,
-    onExit: () => navigate(`/game/${gameId}`, { replace: true }),
+    onExit: () => navigate(`/level/${gameId}/prepare`, { replace: true }),
   });
 }

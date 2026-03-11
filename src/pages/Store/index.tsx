@@ -4,6 +4,7 @@ import type { StoreItem } from '../../types/api';
 import { Page } from '../../components/common/Page';
 import { Loading } from '../../components/common/Loading';
 import { ErrorView } from '../../components/common/ErrorView';
+import { PullToRefreshContainer } from '../../components/common/PullToRefreshContainer';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '../../icons';
 import { getErrorMessage } from '../../utils/error';
@@ -61,8 +62,9 @@ export function Store() {
 
   return (
     <Page showTab={false}>
-      <div className="screen">
-        <div className="stack">
+      <PullToRefreshContainer onRefresh={load}>
+        <div className="screen">
+          <div className="stack">
           <div className="row">
             <button
               type="button"
@@ -129,6 +131,7 @@ export function Store() {
           </Grid>
         </div>
       </div>
+      </PullToRefreshContainer>
     </Page>
   );
 }

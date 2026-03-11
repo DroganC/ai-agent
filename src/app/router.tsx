@@ -4,7 +4,6 @@ import { LoginCallback } from '../pages/LoginCallback';
 import { Leaderboard } from '../pages/Leaderboard';
 import { Profile } from '../pages/Profile';
 import { Home } from '../pages/Home';
-import { GameIntro } from '../pages/GameIntro';
 import { GamePlay } from '../pages/GamePlay';
 import { Levels } from '../pages/Levels';
 import { LevelPrepare } from '../pages/LevelPrepare';
@@ -14,8 +13,9 @@ import { Store } from '../pages/Store';
 import { StoreOrders } from '../pages/StoreOrders';
 import { Learning } from '../pages/Learning';
 import { TabLayout } from './TabLayout';
+import { RedirectGameToLevelPrepare } from './RedirectGameToLevelPrepare';
 
-// 页面已解耦为每页独立目录，入口为各目录下的 index.tsx；页面内可包含 components 子目录
+/** 页面已解耦为每页独立目录，入口为各目录下的 index.tsx；页面内可包含 components 子目录 */
 
 export const router = createBrowserRouter([
   { path: '/login-callback', element: <LoginCallback /> },
@@ -44,7 +44,7 @@ export const router = createBrowserRouter([
       },
 
       // App stack pages (not in Tab)
-      { path: 'game/:gameId', element: <GameIntro /> },
+      { path: 'game/:gameId', element: <RedirectGameToLevelPrepare /> },
       { path: 'game/:gameId/play', element: <GamePlay /> },
       { path: 'levels', element: <Levels /> },
       { path: 'level/:id/prepare', element: <LevelPrepare /> },

@@ -77,6 +77,41 @@ export class LevelsStore {
     }
   }
 
+  /**
+   * 拉取全部关卡：遍历所有场景 → 模块 → 关卡，扁平化列表
+   * 用于关卡列表页（无场景/模块筛选）展示全部关卡，并保留 scenes/modules 供卡片展示所属信息
+   */
+  async loadAllLevels(): Promise<void> {
+    this.loading = true;
+    this.error = null;
+    try {
+      const sceneList = await fetchScenes();
+      const allModules: LevelModule[] = [];
+      const allLevels: Level[] = [];
+      for (const scene of sceneList) {
+        const moduleList = await fetchModules(scene.id);
+        allModules.push(...moduleList);
+        for (const m of moduleList) {
+          const levels = await fetchLevelsByModule(m.id);
+          allLevels.push(...levels);
+        }
+      }
+      runInAction(() => {
+        this.scenes = sceneList;
+        this.modules = allModules;
+        this.levels = allLevels;
+      });
+    } catch (e: unknown) {
+      runInAction(() => {
+        this.error = getErrorMessage(e, '加载失败');
+      });
+    } finally {
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  }
+
   /** 重置错误，便于重试 */
   clearError(): void {
     this.error = null;

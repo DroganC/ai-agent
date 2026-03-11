@@ -1,82 +1,107 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { observer } from 'mobx-react-lite';
-import { reaction } from 'mobx';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { SearchBar } from 'antd-mobile';
 import { useStores } from '../../stores';
 import { Page } from '../../components/common/Page';
 import { Loading } from '../../components/common/Loading';
 import { ErrorView } from '../../components/common/ErrorView';
 import { PageHeader } from '../../components/common/PageHeader';
-import { SceneFilterRow } from './components/SceneFilterRow';
-import { ModuleFilterRow } from './components/ModuleFilterRow';
+import { PullToRefreshContainer } from '../../components/common/PullToRefreshContainer';
 import { LevelListItem } from './components/LevelListItem';
+import { SceneFilterRow } from './components/SceneFilterRow';
 
 /**
- * 场景与关卡页（所有游戏入口）
- * 顶部分组筛选（场景 + 模块），下方为当前模块下的关卡/游戏列表，点击进入准备页
- * 状态由 levelsStore 统一管理，与 uiStore.scene 联动
+ * 关卡列表页：展示全部关卡，支持场景筛选与关键词搜索；卡片显示所属场景与所属模块。
  */
+/** 路由 state：可选 focusSearch 用于从其他页跳转时自动聚焦搜索框 */
+type LevelsRouteState = { focusSearch?: boolean } | null;
+
 export const Levels = observer(function Levels() {
   const navigate = useNavigate();
-  const { levelsStore, uiStore } = useStores();
+  const location = useLocation();
+  const { levelsStore } = useStores();
+  const focusSearch = (location.state as LevelsRouteState)?.focusSearch ?? false;
 
-  /** 监听当前场景变化，重新拉取场景/模块及首模块关卡 */
+  /** 初始加载全部关卡 */
   useEffect(() => {
-    const dispose = reaction(
-      () => uiStore.scene,
-      (sceneCode) => void levelsStore.loadScenesAndFirstLevels(sceneCode),
-      { fireImmediately: true }
-    );
-    return () => dispose();
-  }, [uiStore, levelsStore]);
+    void levelsStore.loadAllLevels();
+  }, [levelsStore]);
 
-  /** 重试：刷新页面 */
-  const handleRetry = (): void => {
-    window.location.reload();
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [activeSceneId, setActiveSceneId] = useState<number | null>(null);
+
+  const filteredLevels = useMemo(() => {
+    let list = levelsStore.levels;
+    if (activeSceneId != null) {
+      const moduleIdsInScene = levelsStore.modules
+        .filter((m) => m.scene_id === activeSceneId)
+        .map((m) => m.id);
+      list = list.filter((l) => moduleIdsInScene.includes(l.module_id));
+    }
+    const kw = searchKeyword.trim();
+    if (!kw) return list;
+    return list.filter((l) => l.name.includes(kw));
+  }, [levelsStore.levels, levelsStore.modules, activeSceneId, searchKeyword]);
+
+  const refresh = async (): Promise<void> => {
+    await levelsStore.loadAllLevels();
   };
 
   if (levelsStore.loading) return <Loading />;
-  if (levelsStore.error) return <ErrorView message={levelsStore.error} onRetry={handleRetry} />;
+  if (levelsStore.error) return <ErrorView message={levelsStore.error} onRetry={() => void levelsStore.loadAllLevels()} />;
 
   return (
     <Page showTab={false}>
-      <div className="screen">
-        <div className="stack" style={{ gap: 'var(--space-3)' }}>
-          <PageHeader
-            title="场景与关卡"
-            subtitle="按场景、模块筛选，选择关卡开始挑战"
-            onBack={() => navigate(-1)}
-          />
+      <PullToRefreshContainer onRefresh={refresh}>
+        <div className="screen levels-page">
+          <div className="stack">
+            <PageHeader
+              title="关卡列表"
+              subtitle="搜索关卡名称"
+              onBack={() => navigate(-1)}
+            />
 
-          <SceneFilterRow
-            scenes={levelsStore.scenes}
-            activeSceneCode={uiStore.scene}
-            onSelect={(code) => uiStore.setScene(code)}
-          />
+            <div className="levels-filter-block">
+              <SceneFilterRow
+                scenes={levelsStore.scenes}
+                activeSceneId={activeSceneId}
+                onSelectAll={() => setActiveSceneId(null)}
+                onSelectScene={(id) => setActiveSceneId(id)}
+                noCard
+              />
+              <div className="levels-search-inner">
+                <SearchBar
+                  placeholder="搜索关卡名称"
+                  value={searchKeyword}
+                  onChange={setSearchKeyword}
+                  autoFocus={focusSearch}
+                  style={{ '--border-radius': 'var(--radius-sm)', '--background': 'var(--color-card)' } as CSSProperties}
+                />
+              </div>
+            </div>
 
-          <ModuleFilterRow
-            modules={levelsStore.modules}
-            activeModuleId={levelsStore.activeModuleId}
-            onSelect={(id) => void levelsStore.setActiveModuleAndLoadLevels(id)}
-          />
-
-          <div>
-            <div className="sectionTitle">关卡</div>
-            <div className="sectionCard">
-              <ul className="sectionCardList">
-                {levelsStore.levels.map((level) => (
-                  <LevelListItem key={level.id} level={level} />
+            <div className="levels-list-section">
+              <div className="levels-list">
+                {filteredLevels.map((level) => (
+                  <LevelListItem
+                    key={level.id}
+                    level={level}
+                    scenes={levelsStore.scenes}
+                    modules={levelsStore.modules}
+                  />
                 ))}
-                {levelsStore.levels.length === 0 && (
-                  <li className="sectionCardList__item">
-                    <span className="subtle">暂无关卡</span>
-                  </li>
+                {filteredLevels.length === 0 && (
+                  <div className="levels-empty">
+                    {searchKeyword.trim() ? '无匹配关卡' : '暂无关卡'}
+                  </div>
                 )}
-              </ul>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </PullToRefreshContainer>
     </Page>
   );
 });

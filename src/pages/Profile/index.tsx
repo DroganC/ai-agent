@@ -5,6 +5,7 @@ import { useStores } from '../../stores';
 import { Page } from '../../components/common/Page';
 import { Loading } from '../../components/common/Loading';
 import { ErrorView } from '../../components/common/ErrorView';
+import { PullToRefreshContainer } from '../../components/common/PullToRefreshContainer';
 import { PersonalInfoBlock } from '../../components/common/PersonalInfoBlock';
 import { QuickEntryGrid, type QuickEntryItem } from './components/QuickEntryGrid';
 
@@ -37,24 +38,21 @@ export const Profile = observer(function Profile() {
     void profileStore.load();
   }, [profileStore]);
 
-  const handleRetry = (): void => {
-    window.location.reload();
-  };
-
   const handleQuickEntryNavigate = (path: string): void => {
     navigate(path);
   };
 
   if (profileStore.loading) return <Loading />;
-  if (profileStore.error) return <ErrorView message={profileStore.error} onRetry={handleRetry} />;
+  if (profileStore.error) return <ErrorView message={profileStore.error} onRetry={() => void profileStore.load()} />;
 
   const user = authStore.user;
   const bestDurationSec: number | null = user?.best_duration_ms ? Math.round(user.best_duration_ms / 1000) : null;
 
   return (
     <Page>
-      <div className="screen">
-        <div className="stack" style={{ gap: 'var(--space-3)' }}>
+      <PullToRefreshContainer onRefresh={async () => { await profileStore.load(); }}>
+        <div className="screen">
+          <div className="stack" style={{ gap: 'var(--space-3)' }}>
           <div className="row">
             <div>
               <div className="title" style={{ fontSize: 'var(--font-h1)' }}>
@@ -129,8 +127,9 @@ export const Profile = observer(function Profile() {
               </ul>
             </div>
           </div>
+          </div>
         </div>
-      </div>
+      </PullToRefreshContainer>
     </Page>
   );
 });
