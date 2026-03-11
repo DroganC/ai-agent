@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Button as AMButton } from 'antd-mobile';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
 
@@ -8,29 +9,28 @@ export const Button = ({
   full,
   onClick,
   disabled,
-  className = '',
 }: {
   children: ReactNode;
   variant?: ButtonVariant;
   full?: boolean;
   onClick?: () => void;
   disabled?: boolean;
-  className?: string;
 }) => {
-  const base = 'inline-flex items-center justify-center gap-2 text-sm font-medium rounded-[var(--radius-btn)] transition whitespace-nowrap';
-  const sizing = 'h-9 px-3'; // 36px height
-  const styleMap: Record<ButtonVariant, string> = {
-    primary: 'bg-primary text-white shadow-sm disabled:bg-gray-300 disabled:text-gray-500',
-    secondary: 'bg-white border border-slate-200 text-gray-700 disabled:text-gray-400',
-    ghost: 'bg-transparent text-primary',
+  const map: Record<ButtonVariant, { color?: 'primary'; fill?: 'solid' | 'outline' | 'none' }> = {
+    primary: { color: 'primary', fill: 'solid' },
+    secondary: { color: 'primary', fill: 'outline' },
+    ghost: { color: 'primary', fill: 'none' },
   };
   return (
-    <button
+    <AMButton
       onClick={onClick}
       disabled={disabled}
-      className={`${base} ${sizing} ${styleMap[variant]} ${full ? 'w-full' : ''} ${className}`}
+      block={full}
+      color={map[variant].color}
+      fill={map[variant].fill}
+      size="middle"
     >
       {children}
-    </button>
+    </AMButton>
   );
 };

@@ -1,4 +1,5 @@
 import { Icon, IconKey } from '../../icons';
+import { Button } from './Button';
 
 export const IconButton = ({
   icon,
@@ -11,13 +12,10 @@ export const IconButton = ({
   onClick?: () => void;
   active?: boolean;
 }) => (
-  <button
-    onClick={onClick}
-    className={`inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm transition ${
-      active ? 'bg-primary text-white shadow-sm' : 'bg-[#f1f2f6] text-gray-700'
-    }`}
-  >
-    <Icon name={icon} size={16} weight={active ? 'fill' : 'bold'} />
-    {label}
-  </button>
+  <Button variant={active ? 'primary' : 'secondary'} onClick={onClick}>
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+      <Icon name={icon} size={16} weight={active ? 'fill' : 'bold'} />
+      {label}
+    </span>
+  </Button>
 );

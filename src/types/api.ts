@@ -23,11 +23,16 @@ export type SceneCode = Scene['code'];
 
 export type LevelModule = { id: number; scene_id: number; name: string; order_no: number };
 
+/** 游戏类型（用于按玩法渲染不同真实游戏组件） */
+export type GameType = 'steps' | 'quiz' | 'link-match' | 'challenge';
+
 export type Level = {
   id: number;
   module_id: number;
   name: string;
   difficulty: number;
+  /** 关卡对应的玩法类型；用于游戏页动态渲染不同组件 */
+  game_type?: GameType;
   unlock_prev_level_id?: number | null;
   estimated_seconds?: number;
   reward_points: number;
@@ -90,7 +95,7 @@ export type StoreOrder = { id: number; item_id: number; status: string; cost_poi
 export type LearningCategory = { id: number; parent_id?: number | null; name: string };
 export type LearningMaterial = { id: number; title: string; type: 'doc' | 'video' | 'image' | 'link'; category_id: number; url: string; status: number };
 
-export type TabKey = '/hall' | '/leaderboard' | '/profile';
+export type TabKey = '/home' | '/rank' | '/me';
 
 export type PlayRouteState = {
   attemptId: number;

@@ -7,8 +7,16 @@ export const ProgressMini = ({ percent }: ProgressMiniProps) => {
   const safePercent = Math.min(100, Math.max(0, percent));
 
   return (
-    <div className="w-full h-1.5 rounded-full bg-[#e6e7ec] overflow-hidden">
-      <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${safePercent}%` }} />
+    <div style={{ width: '100%', height: 6, borderRadius: 999, background: '#e6e7ec', overflow: 'hidden' }}>
+      <div
+        style={{
+          height: '100%',
+          width: `${safePercent}%`,
+          borderRadius: 999,
+          background: 'var(--adm-color-primary)',
+          transition: 'width 200ms ease',
+        }}
+      />
     </div>
   );
 };

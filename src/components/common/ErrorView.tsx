@@ -1,10 +1,15 @@
+import { ErrorBlock } from 'antd-mobile';
+import { Button } from './Button';
+
 export const ErrorView = ({ message, onRetry }: { message: string; onRetry?: () => void }) => (
-  <div className="w-full py-8 text-center text-red-500">
-    <div className="mb-3">{message}</div>
+  <div style={{ width: '100%', padding: '24px 0' }}>
+    <ErrorBlock status="default" title="出错了" description={message} />
     {onRetry && (
-      <button className="px-4 py-2 rounded bg-primary text-white" onClick={onRetry}>
-        重试
-      </button>
+      <div style={{ padding: '0 16px', marginTop: 12 }}>
+        <Button full onClick={onRetry}>
+          重试
+        </Button>
+      </div>
     )}
   </div>
 );

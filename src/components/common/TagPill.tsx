@@ -1,12 +1,13 @@
 import { ReactNode } from 'react';
+import { Tag } from 'antd-mobile';
 
 export const TagPill = ({ children, active = false, icon }: { children: ReactNode; active?: boolean; icon?: ReactNode }) => (
-  <span
-    className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm whitespace-nowrap transition ${
-      active ? 'bg-[#f0e9ff] text-primary font-semibold shadow-sm' : 'bg-[#f1f2f6] text-gray-700'
-    }`}
+  <Tag
+    color="primary"
+    fill={active ? 'solid' : 'outline'}
+    style={{ borderRadius: 999, padding: '6px 12px', fontSize: 13, display: 'inline-flex', gap: 6, alignItems: 'center' }}
   >
     {icon}
     {children}
-  </span>
+  </Tag>
 );

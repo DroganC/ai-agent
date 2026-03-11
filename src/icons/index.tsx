@@ -1,5 +1,7 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   HouseLine,
+  ChartLineUp,
   Trophy,
   UserCircle,
   ChatsTeardrop,
@@ -20,16 +22,21 @@ import {
   XCircle,
   ArrowClockwise,
   IconWeight,
+  DotsNine,
+  Smiley,
 } from 'phosphor-react';
 
 export const icons = {
   home: HouseLine,
+  analytics: ChartLineUp,
   leaderboard: Trophy,
   profile: UserCircle,
   chat: ChatsTeardrop,
   calendar: Calendar,
   bell: Bell,
   settings: GearSix,
+  dots: DotsNine,
+  smile: Smiley,
   plus: Plus,
   search: MagnifyingGlass,
   filter: SlidersHorizontal,

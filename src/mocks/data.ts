@@ -12,22 +12,22 @@ export const mockUser = {
 };
 
 export const scenes: Scene[] = [
-  { id: 1, code: 'urban', name: '城市场景', cover_url: 'https://dummyimage.com/300x160/0064ff/ffffff&text=Urban' },
-  { id: 2, code: 'factory', name: '工厂场景', cover_url: 'https://dummyimage.com/300x160/004bb5/ffffff&text=Factory' },
+  { id: 1, code: 'urban', name: '办公楼场景', cover_url: 'https://dummyimage.com/300x160/ff4d4f/ffffff&text=Office' },
+  { id: 2, code: 'factory', name: '厂区场景', cover_url: 'https://dummyimage.com/300x160/fa8c16/ffffff&text=Factory' },
 ];
 
 export const modules: LevelModule[] = [
-  { id: 11, scene_id: 1, name: '基础安全', order_no: 1 },
-  { id: 12, scene_id: 1, name: '设备操作', order_no: 2 },
-  { id: 21, scene_id: 2, name: '生产安全', order_no: 1 },
+  { id: 11, scene_id: 1, name: '基础知识', order_no: 1 },
+  { id: 12, scene_id: 1, name: '应急处置', order_no: 2 },
+  { id: 21, scene_id: 2, name: '隐患排查', order_no: 1 },
 ];
 
 export const levels: Level[] = [
-  { id: 101, module_id: 11, name: '进入现场前检查', difficulty: 2, unlock_prev_level_id: null, estimated_seconds: 120, reward_points: 30, status: 1, unlocked: true, best_score: 95, best_duration_ms: 115000 },
-  { id: 102, module_id: 11, name: '穿戴防护装备', difficulty: 3, unlock_prev_level_id: 101, estimated_seconds: 160, reward_points: 40, status: 1, unlocked: true, best_score: 88, best_duration_ms: 140000 },
-  { id: 103, module_id: 11, name: '危险源辨识', difficulty: 4, unlock_prev_level_id: 102, estimated_seconds: 200, reward_points: 50, status: 1, unlocked: false },
-  { id: 201, module_id: 12, name: '设备上电流程', difficulty: 3, unlock_prev_level_id: null, estimated_seconds: 180, reward_points: 35, status: 1, unlocked: true },
-  { id: 301, module_id: 21, name: '化学品存储', difficulty: 4, unlock_prev_level_id: null, estimated_seconds: 220, reward_points: 45, status: 1, unlocked: true },
+  { id: 101, module_id: 11, game_type: 'quiz', name: '火灾报警与初期处置', difficulty: 2, unlock_prev_level_id: null, estimated_seconds: 120, reward_points: 30, status: 1, unlocked: true, best_score: 95, best_duration_ms: 115000 },
+  { id: 102, module_id: 11, game_type: 'steps', name: '疏散逃生要点（低姿、捂口鼻）', difficulty: 3, unlock_prev_level_id: 101, estimated_seconds: 160, reward_points: 40, status: 1, unlocked: true, best_score: 88, best_duration_ms: 140000 },
+  { id: 103, module_id: 11, game_type: 'link-match', name: '常见消防标识识别', difficulty: 2, unlock_prev_level_id: 102, estimated_seconds: 140, reward_points: 35, status: 1, unlocked: false },
+  { id: 201, module_id: 12, game_type: 'steps', name: '灭火器“四步法”（提、拔、握、压）', difficulty: 3, unlock_prev_level_id: null, estimated_seconds: 180, reward_points: 45, status: 1, unlocked: true },
+  { id: 301, module_id: 21, game_type: 'challenge', name: '办公室隐患排查（电器/通道）', difficulty: 3, unlock_prev_level_id: null, estimated_seconds: 200, reward_points: 50, status: 1, unlocked: true },
 ];
 
 export const leaderboard: LeaderboardItem[] = Array.from({ length: 15 }).map((_, idx) => ({

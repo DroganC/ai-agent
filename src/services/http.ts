@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosHeaders } from 'axios';
-import { authStore } from '../store/auth';
+import { runInAction } from 'mobx';
+import { storeRef } from '../stores/storeRef.js';
 import { getAxiosApiError } from '../utils/error';
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/api/v1';
@@ -7,7 +8,7 @@ const API_BASE = import.meta.env.VITE_API_BASE || '/api/v1';
 export const http = axios.create({ baseURL: API_BASE });
 
 http.interceptors.request.use((config) => {
-  const token = authStore.token;
+  const token = storeRef?.authStore.token;
   if (token) {
     const headers = AxiosHeaders.from(config.headers);
     headers.set('Authorization', `Bearer ${token}`);
@@ -24,5 +25,5 @@ http.interceptors.response.use(
 );
 
 export const setAuthToken = (token: string | null) => {
-  if (token) authStore.token = token;
+  if (token && storeRef) runInAction(() => { storeRef!.authStore.token = token; });
 };

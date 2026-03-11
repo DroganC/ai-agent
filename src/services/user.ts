@@ -1,10 +1,11 @@
 import { http } from './http';
 import type { ApiResponse, PointTransaction } from '../types/api';
-import { authStore, UserInfo } from '../store/auth';
+import type { UserInfo } from '../stores/authStore';
+import { storeRef } from '../stores/storeRef.js';
 
 export const fetchMe = async () => {
   const { data } = await http.get<ApiResponse<UserInfo>>('/users/me');
-  authStore.updateUser(data.data);
+  if (storeRef) storeRef.authStore.updateUser(data.data);
   return data.data;
 };
 

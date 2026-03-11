@@ -1,14 +1,15 @@
-# AI 工程大脑 - 工单智能派单可视化
+# 消防安全训练平台（移动端 H5）
 
-模拟工厂 IT 运维工单从产生、流入 AI 大脑、智能分析后自动派发给员工坐席的全流程可视化页面。
+面向企业/学校消防培训场景的互动学习平台，通过多款小游戏（答题、步骤操作、连连看、闯关等）提升消防安全知识与应急能力，内置排行榜与个人成长体系。
 
 ## 技术栈
 
-- React 18 (Function Component + Hooks)
+- React 18 + TypeScript
 - Vite 7
-- Redux Toolkit
-- TypeScript
-- 原生 CSS + CSS 变量 + normalize.css
+- MobX（mobx + mobx-react-lite）
+- antd-mobile
+- Less + CSS 变量（自定义主题，主色 `#0064ff`）
+- @antv/f2 + @antv/f2-react（首页个人看板：最近 10 天柱状图+平滑折线图、双 Y 轴左局数右积分，Mock 数据）
 
 ## 环境要求
 
@@ -34,36 +35,55 @@ npm run preview
 npm run lint
 ```
 
-## 项目结构
+## 项目结构（简版）
 
 ```
 src/
-├── components/       # 页面组件
-│   ├── AIBrain/      # AI 大脑核心区
-│   ├── Connections/  # 模块/坐席与大脑连线
-│   ├── EngineeringModule/
-│   ├── PauseControl/
-│   ├── SeatCard/
-│   ├── StatsBar/
-│   ├── TicketCard/
-│   └── TicketLayer/  # 工单飞行层
-├── store/            # Redux Toolkit 切片
-│   ├── ticketsSlice.ts
-│   ├── seatsSlice.ts
-│   ├── statsSlice.ts
-│   └── uiSlice.ts
-├── hooks/
-│   └── useGameLoop.ts # 工单生成、移动、派单逻辑
-├── App.tsx
-├── main.tsx
-└── index.css
+  app/
+    router.tsx        # createBrowserRouter 路由表
+    TabLayout.tsx     # 底部 Tab（首页/排行榜/我的）
+    App.tsx
+  pages/
+    Home/
+      index.tsx       # 首页：上半部个人信息 + F2 个人看板，下半部场景训练列表
+      components/
+        PersonalInfoCard.tsx
+        PersonalDashboard.tsx   # @antv/f2 柱状+折线（最近10天、双Y轴、平滑曲线），Mock 数据
+        LevelGroup.tsx
+        LevelCard.tsx
+    Leaderboard/
+      index.tsx
+      components/RankRow.tsx
+    Profile/
+      index.tsx
+      components/QuickEntryGrid.tsx
+    GameIntro/, GamePlay/, Levels/, LevelPrepare/, LevelPlay/, Settlement/,
+    Store/, StoreOrders/, Learning/, LoginCallback/, Hall/
+  components/
+    common/           # Page, Button, BottomTab, Loading, ErrorView, AuthGuard, ...
+    games/            # 真实游戏组件（react.lazy 动态加载）
+      renderGame.tsx  # renderGame(type, props) 根据 game_type 渲染不同玩法
+      steps/StepsGame.tsx
+      quiz/QuizGame.tsx
+      link-match/LinkMatchGame.tsx
+      challenge/ChallengeGame.tsx
+  stores/             # MobX RootStore + authStore + uiStore
+  services/           # API 调用封装（levels、leaderboard、user、learning 等）
+  styles/             # Less 变量 + 全局样式
+  mocks/              # MSW mock 数据与 handlers
 ```
 
-## 功能说明
+## 核心功能
 
-- **左侧**：生产工程、质检工程、仓储工程、设备工程（按权重 60%/20%/15%/5% 随机生成工单）
-- **中央**：AI 大脑呼吸/脉冲与数据流动画，处理中时显示派单逻辑提示
-- **右侧**：8～10 个坐席网格，空闲/忙碌状态，工单到达后处理 5～8 秒
-- **顶部**：工单总数、已处理数、派单成功率
-- **右下角**：暂停/继续
-- **悬停**：工单、工程卡片、坐席卡片可悬停查看详情
+- **首页**
+  - 顶部个人信息卡片：头像首字、姓名、部门/基地、总积分/可用积分
+  - 个人看板：使用 F2 绘制最近 10 天游戏记录（柱状=局数、折线=总积分平滑曲线，双 Y 轴，图例与标题同行；当前为 Mock 数据，可接入真实接口）
+  - 场景训练：按场景/模块分组展示小游戏入口卡片，支持查看详情并进入游戏
+- **排行榜**
+  - 支持全部榜 & 本部门榜切换，高亮当前用户
+- **个人主页**
+  - 展示基本信息、成绩统计、快捷入口（学习中心 / 积分商城）、积分明细
+- **游戏体系**
+  - 游戏首页：展示玩法说明、积分口径示例、历史最佳成绩
+  - 游戏内：通过 `game_type` + `renderGame(type)` 动态渲染不同玩法（步骤类、答题类、连连看、闯关等）
+  - 关卡准备/结算：统一的 attempt 创建、事件上报与复盘时间线

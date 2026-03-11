@@ -1,9 +1,19 @@
 import { ReactNode } from 'react';
 import { BottomTab } from './BottomTab';
+import { SafeArea } from 'antd-mobile';
 
 export const Page = ({ children, showTab = true }: { children: ReactNode; showTab?: boolean }) => (
-  <div className="page min-h-screen flex flex-col pb-16">
-    <div className="flex-1 px-4 pb-4">{children}</div>
+  <div
+    className="page"
+    style={{
+      minHeight: '100vh',
+      paddingBottom: showTab
+        ? 'calc(var(--tabbar-height) + var(--space-4) + env(safe-area-inset-bottom))'
+        : 0,
+    }}
+  >
+    <div style={{ flex: 1, padding: 0 }}>{children}</div>
     {showTab && <BottomTab />}
+    <SafeArea position="bottom" />
   </div>
 );

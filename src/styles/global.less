@@ -1,7 +1,7 @@
 @import './variable.less';
 
 html {
-  font-size: 37.5px;
+  font-size: 16px;
 }
 
 html, body, #root {
@@ -31,10 +31,256 @@ small { font-size: var(--font-caption); }
 
 .card {
   background: @color-card;
-  border-radius: 16px;
-  box-shadow: @shadow-soft;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-2);
+  border: none;
+}
+
+/* antd-mobile Card 无边框，仅用阴影区分（全局覆盖） */
+.adm-card {
+  border-radius: var(--radius-card);
+  border: none;
+  box-shadow: var(--shadow-2);
+  background: var(--color-card);
+}
+
+.adm-card .adm-card-header {
+  border-bottom: none;
+}
+
+/* List 的分隔线更“线框化” */
+.adm-list {
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.adm-list .adm-list-item {
+  border-bottom: var(--hairline);
+}
+
+.adm-list .adm-list-item:last-child {
+  border-bottom: none;
 }
 
 button {
   font-family: inherit;
+}
+
+/* ===== 设计规范：布局与间距工具类（尽量复用，避免散落硬编码） ===== */
+.screen {
+  padding: var(--page-padding);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.title {
+  font-size: var(--font-h2);
+  font-weight: 900;
+  color: var(--color-text);
+}
+
+.subtle {
+  font-size: var(--font-caption);
+  color: var(--color-text-muted);
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2); /* 标题与下方卡片/内容统一间距 */
+  font-size: var(--font-h3);
+  font-weight: 900;
+  color: var(--color-text);
+}
+
+.sectionTitle::before {
+  content: '';
+  width: 0.10rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: var(--color-primary);
+}
+
+/* 区块内容软卡片：柔和圆角 + 轻阴影 + 细线，替代生硬白卡 */
+.sectionCard {
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+  border: 1px solid var(--wire-soft);
+  padding: var(--space-4);
+  margin-bottom: 8px;
+}
+
+/* 软卡片内列表（如积分明细） */
+.sectionCardList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sectionCardList__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: var(--hairline);
+  min-height: 0;
+}
+
+.sectionCardList__item:last-child {
+  border-bottom: none;
+}
+
+/* 成绩统计三列网格 */
+.sectionCardStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.sectionBody {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-line);
+  background: rgba(0, 100, 255, 0.06);
+}
+
+.statLabel {
+  font-size: var(--font-caption);
+  color: var(--color-text-muted);
+}
+
+.statValue {
+  margin-top: var(--space-1);
+  font-size: var(--font-h2);
+  font-weight: 900;
+  color: var(--color-text);
+}
+
+.chipGroup {
+  display: inline-flex;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--color-card);
+}
+
+.chip {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-caption);
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+}
+
+.chipActive {
+  color: var(--color-primary);
+  background: rgba(0, 100, 255, 0.10);
+  font-weight: 800;
+}
+
+/* 小尺寸动作按钮（用于顶部：搜索/刷新等） */
+.actionPill {
+  border: var(--hairline);
+  background: var(--color-card);
+  border-radius: 999px;
+  padding: var(--space-2) var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  box-shadow: var(--shadow-1);
+  color: var(--color-text);
+}
+
+.actionPill:active {
+  transform: translateY(1px);
+  box-shadow: var(--shadow-1);
+  opacity: 0.92;
+}
+
+.actionPill:focus-visible {
+  outline: 2px solid rgba(0, 100, 255, 0.35);
+  outline-offset: 2px;
+}
+
+.elevate-1 { box-shadow: var(--shadow-1); }
+.elevate-2 { box-shadow: var(--shadow-2); }
+.elevate-3 { box-shadow: var(--shadow-3); }
+
+.actionPillText {
+  font-size: var(--font-caption);
+  color: var(--color-text-muted);
+  font-weight: 800;
+}
+
+/* ===== 设计策略：个人信息区（首页 / 我的 等复用） =====
+ * 结构：横向 [头像] + [姓名、副文案、Tag 行]
+ * - 容器：flex 横向、居中对齐、统一间距与内边距
+ * - 头像：固定尺寸、主色浅底、圆角、首字/图标
+ * - 姓名：h3 字级、字重 900
+ * - 副文案：subtle 样式、与姓名间距 space-1
+ * - Tag 行：与副文案间距 space-2，flex 换行、gap space-2
+ * 可用于无卡片（首页）或放入 Card 内（我的页），视觉一致
+ */
+.personalInfoBlock {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+}
+
+.personalInfoBlock__avatar {
+  width: 1.12rem;
+  height: 1.12rem;
+  border-radius: var(--radius-lg);
+  background: rgba(0, 100, 255, 0.12);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.42rem;
+  font-weight: 900;
+  flex: 0 0 auto;
+}
+
+.personalInfoBlock__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.personalInfoBlock__name {
+  font-size: var(--font-h3);
+  font-weight: 900;
+  color: var(--color-text);
+}
+
+.personalInfoBlock__meta {
+  margin-top: var(--space-1);
+}
+
+.personalInfoBlock__meta.subtle {
+  font-size: var(--font-caption);
+  color: var(--color-text-muted);
+}
+
+.personalInfoBlock__tags {
+  margin-top: var(--space-2);
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
 }
