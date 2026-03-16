@@ -12,7 +12,7 @@ import { StoreOrdersStore } from './storeOrdersStore.js';
 export class RootStore {
   authStore: AuthStore;
   uiStore: UIStore;
-  /** 场景与关卡页 */
+  /** 场景与游戏列表页 */
   levelsStore: LevelsStore;
   /** 学习中心页 */
   learningStore: LearningStore;

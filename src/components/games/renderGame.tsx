@@ -10,7 +10,7 @@ const ChallengeGame = lazy(() => import('./challenge/ChallengeGame')); // 闯关
 const ClassifyChallengeGame = lazy(() => import('./classify-challenge/ClassifyChallengeGame')); // 分类大挑战（左右滑动归类）
 
 export type GameRenderProps = {
-  /** 关卡数据（可用于关卡名、奖励、计时口径等） */
+  /** 游戏（关卡）数据，可用于名称、奖励、计时等 */
   level: Level;
   /** 游戏结束/退出后的回调，由页面决定跳转或结算 */
   onExit: () => void;

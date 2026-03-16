@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useBackToLevels } from '../../app/useBackToLevels';
 import { fetchLevel } from '../../services/levels';
 import { fetchLife } from '../../services/life';
 import { createAttempt } from '../../services/attempts';
@@ -14,15 +15,15 @@ import { Button } from '../../components/common/Button';
 import { getErrorMessage } from '../../utils/error';
 
 /**
- * 游戏首页（关卡准备页）
- * 全站唯一的游戏介绍/准备页，路由：/level/:id/prepare；旧路径 /game/:gameId 会重定向到此路由。
- * 遵循全站 UI 规范：Page、sectionTitle 外置、sectionCard、底部吸底双按钮。
- * 展示关卡名称、说明、知识技巧、生命值与奖励，提供「返回列表」「开始挑战」入口。
+ * 游戏准备页（一个游戏可含多关卡，本页为单游戏入口）
+ * 路由：/level/:id/prepare；旧路径 /game/:gameId 会重定向到此路由。
+ * 展示游戏名称、说明、知识技巧、生命值与奖励，提供「返回列表」「开始挑战」入口。
  */
 export function LevelPrepare() {
   const { id } = useParams<{ id: string }>();
   const levelId: number = Number(id);
   const navigate = useNavigate();
+  const backToLevels = useBackToLevels();
 
   const [level, setLevel] = useState<Level | null>(null);
   const [life, setLife] = useState<number>(0);
@@ -30,11 +31,11 @@ export function LevelPrepare() {
   const [error, setError] = useState<string | null>(null);
   const [starting, setStarting] = useState<boolean>(false);
 
-  /** 拉取关卡详情与当前生命值 */
+  /** 拉取游戏（关卡）详情与当前生命值 */
   const load = useCallback(async (): Promise<void> => {
     if (!Number.isFinite(levelId)) {
       setLoading(false);
-      setError('无效的关卡 ID');
+      setError('无效的游戏 ID');
       return;
     }
     try {
@@ -68,7 +69,7 @@ export function LevelPrepare() {
   }, [levelId, navigate]);
 
   if (loading) return <Loading />;
-  if (error || !level) return <ErrorView message={error ?? '关卡不存在'} onRetry={load} />;
+  if (error || !level) return <ErrorView message={error ?? '游戏不存在'} onRetry={load} />;
 
   return (
     <Page showTab={false}>
@@ -124,7 +125,7 @@ export function LevelPrepare() {
 
         <div className="game-intro__bottom">
           <div className="game-intro__btn-wrap">
-            <Button variant="secondary" full onClick={() => navigate(-1)}>
+            <Button variant="secondary" full onClick={backToLevels}>
               返回列表
             </Button>
           </div>

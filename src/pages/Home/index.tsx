@@ -30,7 +30,7 @@ export function Home() {
   const [levels, setLevels] = useState<Level[]>([]);
 
   /**
-   * 加载首页数据：场景列表 → 当前场景的模块列表 → 各模块下的关卡列表并扁平化
+   * 加载首页数据：场景列表 → 当前场景的模块列表 → 各模块下的游戏列表并扁平化
    */
   const load = useCallback(async (): Promise<void> => {
     try {
@@ -49,7 +49,7 @@ export function Home() {
       const moduleList = await fetchModules(activeScene.id);
       setModules(moduleList);
 
-      // 并行拉取各模块的关卡列表，再合并为一维数组
+      // 并行拉取各模块的游戏列表，再合并为一维数组
       const levelLists = await Promise.all(moduleList.map((m) => fetchLevelsByModule(m.id)));
       setLevels(levelLists.flat());
       setError(null);
@@ -65,7 +65,7 @@ export function Home() {
   }, [load]);
 
   /**
-   * 将扁平关卡列表按 module_id 分组，并与 modules 顺序对齐，仅保留有关卡的组
+   * 将扁平游戏列表按 module_id 分组，并与 modules 顺序对齐，仅保留有游戏的组
    */
   const groups: LevelGroupItem[] = useMemo(() => {
     const map = new Map<number, Level[]>();
@@ -79,7 +79,7 @@ export function Home() {
       .filter((g) => g.levels.length > 0);
   }, [levels, modules]);
 
-  /** 点击某关卡：未解锁时提示，否则跳转游戏首页 */
+  /** 点击某游戏：未解锁时提示，否则跳转游戏准备页 */
   const handleLevelClick = useCallback(
     (levelId: number): void => {
       const level = levels.find((l) => l.id === levelId);
@@ -144,9 +144,9 @@ export function Home() {
             className="actionPill"
             onClick={() => navigate('/levels')}
             style={{ padding: '0 var(--space-3)', height: '0.7rem' }}
-            aria-label="关卡列表"
+            aria-label="游戏列表"
           >
-            <span className="actionPillText">关卡列表</span>
+            <span className="actionPillText">游戏列表</span>
             <Icon name="caretRight" size={16} weight="bold" />
           </button>
         </div>

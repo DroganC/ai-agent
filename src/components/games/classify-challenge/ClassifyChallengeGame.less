@@ -1,10 +1,52 @@
 @import '../../../styles/variable.less';
 
+/* 分类大挑战 - 游戏卡片配色（通过根 class 切换，见下方 --theme-*） */
 .classify-challenge {
+  --classify-card-bg: var(--color-card);
+  --classify-card-border: var(--wire-soft);
+  --classify-card-shadow: var(--shadow-1);
+  --classify-target-bg: var(--color-card);
+  --classify-target-border: var(--wire-soft);
   padding: var(--page-padding) var(--page-padding) 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+}
+
+/* 配色方案一：消防暖色（橙红系，贴合消防主题） */
+.classify-challenge--theme-fire {
+  --classify-card-bg: linear-gradient(165deg, #fff8f0 0%, #ffefe0 100%);
+  --classify-card-border: rgba(234, 88, 12, 0.2);
+  --classify-card-shadow: 0 10px 24px rgba(234, 88, 12, 0.08);
+  --classify-target-bg: #fff8f0;
+  --classify-target-border: rgba(234, 88, 12, 0.18);
+}
+
+/* 配色方案二：清新绿（薄荷/自然系） */
+.classify-challenge--theme-fresh {
+  --classify-card-bg: linear-gradient(165deg, #f0fdf4 0%, #dcfce7 100%);
+  --classify-card-border: rgba(22, 163, 74, 0.2);
+  --classify-card-shadow: 0 10px 24px rgba(22, 163, 74, 0.08);
+  --classify-target-bg: #f0fdf4;
+  --classify-target-border: rgba(22, 163, 74, 0.18);
+}
+
+/* 配色方案三：沉稳蓝（与品牌主色一致） */
+.classify-challenge--theme-ocean {
+  --classify-card-bg: linear-gradient(165deg, #f0f7ff 0%, #e0edff 100%);
+  --classify-card-border: rgba(0, 100, 255, 0.2);
+  --classify-card-shadow: 0 10px 24px rgba(0, 100, 255, 0.08);
+  --classify-target-bg: #f0f7ff;
+  --classify-target-border: rgba(0, 100, 255, 0.18);
+}
+
+/* 配色方案四：柔和紫（渐变紫） */
+.classify-challenge--theme-lavender {
+  --classify-card-bg: linear-gradient(165deg, #faf5ff 0%, #f3e8ff 100%);
+  --classify-card-border: rgba(126, 34, 206, 0.2);
+  --classify-card-shadow: 0 10px 24px rgba(126, 34, 206, 0.08);
+  --classify-target-bg: #faf5ff;
+  --classify-target-border: rgba(126, 34, 206, 0.18);
 }
 
 .classify-challenge-board {
@@ -22,8 +64,8 @@
 .classify-challenge-target {
   flex: 1;
   border-radius: var(--radius-card);
-  border: 1px solid var(--wire-soft);
-  background: var(--color-card);
+  border: 1px solid var(--classify-target-border);
+  background: var(--classify-target-bg);
   padding: var(--space-3);
   display: flex;
   align-items: center;
@@ -43,7 +85,7 @@
 
 .classify-challenge-card-wrap {
   position: relative;
-  height: 280px;
+  height: 420px;
 }
 
 .classify-challenge-card {
@@ -53,10 +95,10 @@
   top: 0;
   margin: 0 auto;
   border-radius: var(--radius-card);
-  border: 1px solid var(--wire-soft);
-  background: var(--color-card);
+  border: 1px solid var(--classify-card-border);
+  background: var(--classify-card-bg);
   padding: var(--space-4);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--classify-card-shadow);
   touch-action: pan-y;
   user-select: none;
   will-change: transform;
@@ -80,11 +122,6 @@
   margin-top: var(--space-3);
   font-size: var(--font-caption);
   color: var(--color-text-muted);
-}
-
-.classify-challenge-actions {
-  display: flex;
-  gap: var(--space-3);
 }
 
 .classify-challenge-feedback {

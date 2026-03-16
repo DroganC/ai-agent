@@ -17,8 +17,10 @@ import { TabLayout } from './TabLayout';
 import { RedirectGameToLevelPrepare } from './RedirectGameToLevelPrepare';
 import { DEPLOY_CONFIG } from '../utils/configure';
 
-/** 页面已解耦为每页独立目录，入口为各目录下的 index.tsx；页面内可包含 components 子目录 */
-
+/**
+ * 前端路由表：登录回调、Tab 页（首页/排行榜/我的）、游戏/关卡栈页、积分商城、学习中心等。
+ * 使用 createBrowserRouter，basename 从 DEPLOY_CONFIG 读取以支持子路径部署。
+ */
 export const router = createBrowserRouter(
   [
   { path: '/login-callback', element: <LoginCallback /> },

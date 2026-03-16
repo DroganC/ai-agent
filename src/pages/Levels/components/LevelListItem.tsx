@@ -5,7 +5,7 @@ import { Button } from '../../../components/common/Button';
 import { Tag } from 'antd-mobile';
 
 export type LevelListItemProps = {
-  /** 关卡/游戏数据 */
+  /** 游戏（关卡）数据 */
   level: Level;
   /** 场景列表，用于解析所属场景 */
   scenes: Scene[];
@@ -27,7 +27,7 @@ function getSceneAndModuleNames(
 }
 
 /**
- * 关卡卡片：名称、所属场景/所属模块、难度/时长/积分、解锁状态、开始挑战
+ * 游戏卡片：名称、所属场景/模块、难度/时长/积分、解锁状态、开始挑战
  */
 export function LevelListItem({ level, scenes, modules }: LevelListItemProps) {
   const navigate = useNavigate();

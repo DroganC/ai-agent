@@ -39,6 +39,8 @@ let lifeCount = 3;
 let reviveUsed = 0;
 
 function computeUnlocked(level: Level): boolean {
+  // 尊重 data 中显式标记为已解锁的游戏（如分类大挑战 mock 需单独解锁）
+  if (level.unlocked === true) return true;
   if (!level.unlock_prev_level_id) return true;
   const prev = levels.find((x) => x.id === level.unlock_prev_level_id);
   return prev?.best_score !== undefined && prev?.best_score !== null;
@@ -95,7 +97,7 @@ export async function mockFetchLevelsByModule(moduleId: number): Promise<Level[]
 
 export async function mockFetchLevel(id: number): Promise<Level> {
   const level = levels.find((l) => l.id === id);
-  if (!level) throw new Error('关卡不存在');
+  if (!level) throw new Error('游戏不存在');
   return { ...level, unlocked: computeUnlocked(level) };
 }
 

@@ -73,7 +73,7 @@ export default function StepsGame({ level, onExit }: GameRenderProps) {
       title: '本局结算',
       content: (
         <div style={{ fontSize: 'var(--font-body)', color: 'var(--color-text)', lineHeight: 1.6 }}>
-          <div>关卡：{level.name}</div>
+          <div>游戏：{level.name}</div>
           <div>用时：{elapsed} 秒</div>
           <div>误操作：{errors} 次</div>
           <div>关键错误：{keyErrors} 次</div>

@@ -1,11 +1,11 @@
-import { Card, Space, Toast } from 'antd-mobile';
 import { Page } from '../../common/Page';
 import { PageHeader } from '../../common/PageHeader';
 import { Button } from '../../common/Button';
 import type { GameRenderProps } from '../renderGame';
+import underConstruction from './assets/under-construction.svg';
 
 /**
- * 答题类玩法（占位真实游戏组件）
+ * 答题类玩法（占位：内容置空，展示开发中缺省图）
  * 后续可替换为完整题库、计时、得分与上报逻辑。
  */
 export default function QuizGame({ level, onExit }: GameRenderProps) {
@@ -19,23 +19,23 @@ export default function QuizGame({ level, onExit }: GameRenderProps) {
             onBack={onExit}
           />
 
-          <Card style={{ borderRadius: 'var(--radius-card)' }}>
-            <div>
-              <div className="sectionTitle">示例题目</div>
-              <div className="sectionBody subtle" style={{ marginTop: 'var(--space-3)', fontSize: 'var(--font-body)' }}>
-                火灾初期，拨打报警电话应优先说明哪些信息？（示例）
-              </div>
-
-              <Space direction="vertical" block style={{ marginTop: 'var(--space-4)' }}>
-                <Button full onClick={() => Toast.show({ content: '回答已记录（示例）', duration: 1200 })}>
-                  A. 地址 + 火情 + 联系方式
-                </Button>
-                <Button full variant="secondary" onClick={() => Toast.show({ content: '回答已记录（示例）', duration: 1200 })}>
-                  B. 只说“着火了”
-                </Button>
-              </Space>
-            </div>
-          </Card>
+          <div
+            className="quiz-game-placeholder"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 'var(--space-6) var(--space-4)',
+              minHeight: '40vh',
+            }}
+          >
+            <img
+              src={underConstruction}
+              alt="开发中"
+              style={{ width: '100%', maxWidth: 240, height: 'auto', objectFit: 'contain' }}
+            />
+          </div>
 
           <Button full variant="secondary" onClick={onExit}>
             退出

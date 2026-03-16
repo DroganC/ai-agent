@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Card, Modal, Toast } from 'antd-mobile';
+import { Modal, Toast } from 'antd-mobile';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Page } from '../../common/Page';
 import { PageHeader } from '../../common/PageHeader';
-import { Button } from '../../common/Button';
 import type { GameRenderProps } from '../renderGame';
 import type { AttemptEvent, PlayRouteState } from '../../../types/api';
 import { sendEvents, settleAttempt } from '../../../services/attempts';
@@ -14,6 +13,9 @@ import { formatQuestionShort, makeSummary, shuffle } from './utils';
 import './ClassifyChallengeGame.less';
 
 type AnswerSide = Category['id'];
+
+/** 卡片配色主题：'fire' 消防暖色 | 'fresh' 清新绿 | 'ocean' 沉稳蓝 | 'lavender' 柔和紫 */
+const CARD_THEME: 'fire' | 'fresh' | 'ocean' | 'lavender' = 'fire';
 
 type Feedback = {
   ok: boolean;
@@ -42,7 +44,7 @@ export default function ClassifyChallengeGame({ level, onExit }: GameRenderProps
   const attemptId = useAttemptIdFromRoute();
 
   const config: ClassifyLevelConfig = useMemo(() => {
-    // 先用关卡名做弱匹配；后续可改为按 level.id/module_id 映射到后端配置
+    // 先用游戏名做弱匹配；后续可改为按 level.id/module_id 映射到后端配置
     return pickDefaultLevelConfig(level.name);
   }, [level.name]);
 
@@ -137,7 +139,7 @@ export default function ClassifyChallengeGame({ level, onExit }: GameRenderProps
         title,
         content: (
           <div style={{ fontSize: 'var(--font-body)', color: 'var(--color-text)', lineHeight: 1.6 }}>
-            <div>关卡：{level.name}</div>
+            <div>游戏：{level.name}</div>
             <div>题目：{summary.correct}/{summary.total} 正确</div>
             <div>错误：{summary.errors} 次（关键错误 {summary.keyErrors} 次）</div>
             <div>用时：{seconds} 秒</div>
@@ -417,7 +419,7 @@ export default function ClassifyChallengeGame({ level, onExit }: GameRenderProps
 
   return (
     <Page showTab={false}>
-      <div className="classify-challenge">
+      <div className={`classify-challenge classify-challenge--theme-${CARD_THEME}`}>
         <PageHeader title={level.name} description={subtitle} onBack={onBack} />
 
         <div className="classify-challenge-board">
@@ -459,20 +461,6 @@ export default function ClassifyChallengeGame({ level, onExit }: GameRenderProps
             <div className="classify-challenge-feedback-body">{feedback.body}</div>
           </div>
         )}
-
-        <Card style={{ borderRadius: 'var(--radius-card)' }}>
-          <div className="classify-challenge-actions">
-            <Button full variant="secondary" onClick={() => void commitAnswer('left')} disabled={!current || isAnimatingOut}>
-              {left.badge ?? '⬅️'} {left.label}
-            </Button>
-            <Button full onClick={() => void commitAnswer('right')} disabled={!current || isAnimatingOut}>
-              {right.badge ?? '➡️'} {right.label}
-            </Button>
-          </div>
-          <div className="subtle" style={{ marginTop: 'var(--space-3)' }}>
-            本玩法优先适配手机手势；如在桌面端，可直接点击按钮完成归类。
-          </div>
-        </Card>
       </div>
     </Page>
   );

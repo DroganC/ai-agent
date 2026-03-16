@@ -67,10 +67,13 @@ src/
       quiz/QuizGame.tsx
       link-match/LinkMatchGame.tsx
       challenge/ChallengeGame.tsx
-  stores/             # MobX RootStore + authStore + uiStore
-  services/           # API 调用封装（levels、leaderboard、user、learning 等）
+  stores/             # MobX RootStore + authStore + levelsStore 等
+  services/           # API 调用封装（http 对象形式、按服务加 prefix）
+    http.ts           # axios 实例 + 拦截器，请求格式：http.get({ url, params?, headers? })
+    prefix.ts         # getApiPrefix(path)：为 ehs-backend 等请求加服务名前缀，其他服务可自建前缀方法
+    auth.ts, user.ts, levels.ts, scenes.ts, attempts.ts, learning.ts, store.ts, life.ts, leaderboard.ts
   styles/             # Less 变量 + 全局样式
-  mocks/              # MSW mock 数据与 handlers
+  mocks/              # Mock 数据与 mock API（VITE_USE_MOCK 开启时使用）
 ```
 
 ## 核心功能

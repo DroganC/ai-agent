@@ -5,19 +5,19 @@ import { getErrorMessage } from '../utils/error';
 import type { Scene, LevelModule, Level } from '../types/api';
 
 /**
- * 场景与关卡页状态
- * 管理场景列表、模块列表、当前模块下的关卡列表及加载/错误状态
+ * 场景与游戏列表页状态
+ * 管理场景列表、模块列表、当前模块下的游戏列表及加载/错误状态
  */
 export class LevelsStore {
   /** 场景列表 */
   scenes: Scene[] = [];
   /** 当前场景下的模块列表 */
   modules: LevelModule[] = [];
-  /** 当前选中模块下的关卡/游戏列表 */
+  /** 当前选中模块下的游戏列表 */
   levels: Level[] = [];
   /** 当前选中的模块 id，null 表示未选 */
   activeModuleId: number | null = null;
-  /** 是否正在加载（场景+模块+关卡） */
+  /** 是否正在加载（场景+模块+游戏列表） */
   loading = true;
   /** 错误信息，null 表示无错误 */
   error: string | null = null;
@@ -27,7 +27,7 @@ export class LevelsStore {
   }
 
   /**
-   * 拉取场景与模块，并拉取当前场景下首模块的关卡列表
+   * 拉取场景与模块，并拉取当前场景下首模块的游戏列表
    * 需传入当前选中的 sceneCode，用于与 uiStore.scene 同步
    */
   async loadScenesAndFirstLevels(sceneCode: string): Promise<void> {
@@ -60,7 +60,7 @@ export class LevelsStore {
   }
 
   /**
-   * 切换当前模块并拉取该模块下的关卡列表
+   * 切换当前模块并拉取该模块下的游戏列表
    */
   async setActiveModuleAndLoadLevels(moduleId: number): Promise<void> {
     this.activeModuleId = moduleId;
@@ -78,8 +78,8 @@ export class LevelsStore {
   }
 
   /**
-   * 拉取全部关卡：遍历所有场景 → 模块 → 关卡，扁平化列表
-   * 用于关卡列表页（无场景/模块筛选）展示全部关卡，并保留 scenes/modules 供卡片展示所属信息
+   * 拉取全部游戏：遍历所有场景 → 模块 → 游戏，扁平化列表
+   * 用于游戏列表页展示全部游戏，并保留 scenes/modules 供卡片展示所属信息
    */
   async loadAllLevels(): Promise<void> {
     this.loading = true;

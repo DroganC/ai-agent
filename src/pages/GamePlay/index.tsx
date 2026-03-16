@@ -9,8 +9,8 @@ import { useCallback, useEffect, useState } from 'react';
 
 /**
  * 游戏页容器
- * - 负责拉取关卡详情
- * - 根据关卡的 game_type 动态渲染真实游戏组件（react.lazy）
+ * - 负责拉取游戏（关卡）详情
+ * - 根据 game_type 动态渲染对应玩法组件（react.lazy）
  */
 export function GamePlay() {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ export function GamePlay() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  /** 拉取当前关卡详情，用于展示名称等 */
+  /** 拉取当前游戏详情，用于展示名称等 */
   const load = useCallback(async (): Promise<void> => {
     const id = Number(gameId);
     if (!Number.isFinite(id)) {
@@ -49,7 +49,7 @@ export function GamePlay() {
   if (error) return <ErrorView message={error} onRetry={load} />;
   if (!game) return <ErrorView message="未找到游戏" onRetry={load} />;
 
-  // 默认使用 steps（示例步骤玩法），后续后端可按关卡配置下发 game_type
+  // 默认使用 steps（示例步骤玩法），后续后端可按游戏配置下发 game_type
   const type: GameType = game.game_type ?? 'steps';
 
   return renderGame(type, {

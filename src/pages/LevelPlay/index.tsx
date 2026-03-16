@@ -15,7 +15,7 @@ import type { Level } from '../../types/api';
 import { getErrorMessage } from '../../utils/error';
 import { Card, Space } from 'antd-mobile';
 
-/** 当前关卡步骤配置（无 game_type 时的默认步骤 demo） */
+/** 当前游戏步骤配置（无 game_type 时的默认步骤 demo） */
 const steps: ReadonlyArray<{ id: string; title: string }> = [
   { id: 'step1', title: '检查安全帽' },
   { id: 'step2', title: '佩戴护目镜' },
@@ -23,8 +23,8 @@ const steps: ReadonlyArray<{ id: string; title: string }> = [
 ];
 
 /**
- * 关卡游戏内页
- * - 若关卡配置了 game_type，按类型渲染对应游戏（如 link-match/llk 连连看），退出回到准备页
+ * 游戏内页（玩法页）
+ * - 若配置了 game_type，按类型渲染对应玩法（如 link-match/llk 连连看），退出回到准备页
  * - 否则按步骤 demo 流程，从准备页传入 attemptId，完成后上报并跳转结算页
  */
 export function LevelPlay() {
@@ -46,7 +46,7 @@ export function LevelPlay() {
 
   const levelId = id != null ? Number(id) : NaN;
 
-  /** 拉取关卡详情，用于判断 game_type */
+  /** 拉取游戏（关卡）详情，用于判断 game_type */
   const loadLevel = useCallback(async (): Promise<void> => {
     if (!Number.isFinite(levelId)) {
       setLevelLoading(false);
@@ -58,7 +58,7 @@ export function LevelPlay() {
       const lv = await fetchLevel(levelId);
       setLevel(lv);
     } catch (e: unknown) {
-      setLevelError(getErrorMessage(e, '加载关卡失败'));
+      setLevelError(getErrorMessage(e, '加载游戏失败'));
       setLevel(null);
     } finally {
       setLevelLoading(false);
@@ -145,7 +145,7 @@ export function LevelPlay() {
 
   if (levelLoading) return <Loading />;
   if (levelError != null) return <ErrorView message={levelError} onRetry={loadLevel} />;
-  if (level == null) return <ErrorView message="关卡不存在" onRetry={loadLevel} />;
+  if (level == null) return <ErrorView message="游戏不存在" onRetry={loadLevel} />;
 
   /** 以下为无 game_type 时的步骤 demo 流程，需 attemptId；缺失时回到准备页 */
   if (attemptId == null) {

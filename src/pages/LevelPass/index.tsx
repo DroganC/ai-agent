@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useBackToLevels } from '../../app/useBackToLevels';
 import type { GameType, Level, PlayRouteState } from '../../types/api';
 import { fetchLevel } from '../../services/levels';
 import { getErrorMessage } from '../../utils/error';
@@ -27,7 +28,7 @@ export function LevelPass() {
 
   const load = useCallback(async (): Promise<void> => {
     if (!Number.isFinite(levelId)) {
-      setError('无效的关卡 ID');
+      setError('无效的游戏 ID');
       setLoading(false);
       return;
     }
@@ -74,9 +75,7 @@ export function LevelPass() {
     return [];
   }, [gameType]);
 
-  const onBackToLevels = useCallback(() => {
-    navigate('/levels', { replace: true });
-  }, [navigate]);
+  const onBackToLevels = useBackToLevels();
 
   const onReplay = useCallback(() => {
     if (!Number.isFinite(levelId)) return;
@@ -86,7 +85,7 @@ export function LevelPass() {
 
   if (loading) return <Loading />;
   if (error != null) return <ErrorView message={error} onRetry={load} />;
-  if (level == null) return <ErrorView message="关卡不存在" onRetry={load} />;
+  if (level == null) return <ErrorView message="游戏不存在" onRetry={load} />;
 
   return (
     <LevelPassView

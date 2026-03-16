@@ -31,7 +31,7 @@ export type Level = {
   module_id: number;
   name: string;
   difficulty: number;
-  /** 关卡对应的玩法类型；用于游戏页动态渲染不同组件 */
+  /** 游戏对应的玩法类型；用于玩法页动态渲染不同组件 */
   game_type?: GameType;
   unlock_prev_level_id?: number | null;
   estimated_seconds?: number;

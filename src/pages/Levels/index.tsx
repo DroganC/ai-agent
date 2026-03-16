@@ -13,7 +13,7 @@ import { LevelListItem } from './components/LevelListItem';
 import { SceneFilterRow } from './components/SceneFilterRow';
 
 /**
- * 关卡列表页：展示全部关卡，支持场景筛选与关键词搜索；卡片显示所属场景与所属模块。
+ * 游戏列表页：一个游戏可包含一个或多个关卡；本页展示全部游戏，支持场景筛选与关键词搜索。
  */
 /** 路由 state：可选 focusSearch 用于从其他页跳转时自动聚焦搜索框 */
 type LevelsRouteState = { focusSearch?: boolean } | null;
@@ -24,7 +24,7 @@ export const Levels = observer(function Levels() {
   const { levelsStore } = useStores();
   const focusSearch = (location.state as LevelsRouteState)?.focusSearch ?? false;
 
-  /** 初始加载全部关卡 */
+  /** 初始加载全部游戏（含关卡） */
   useEffect(() => {
     void levelsStore.loadAllLevels();
   }, [levelsStore]);
@@ -58,8 +58,8 @@ export const Levels = observer(function Levels() {
         <div className="screen levels-page">
           <div className="stack">
             <PageHeader
-              title="关卡列表"
-              description="搜索关卡名称"
+              title="游戏列表"
+              description="搜索游戏名称"
               onBack={() => navigate(-1)}
             />
 
@@ -73,7 +73,7 @@ export const Levels = observer(function Levels() {
               />
               <div className="levels-search-inner">
                 <SearchBar
-                  placeholder="搜索关卡名称"
+                  placeholder="搜索游戏名称"
                   value={searchKeyword}
                   onChange={setSearchKeyword}
                   autoFocus={focusSearch}
@@ -94,7 +94,7 @@ export const Levels = observer(function Levels() {
                 ))}
                 {filteredLevels.length === 0 && (
                   <div className="levels-empty">
-                    {searchKeyword.trim() ? '无匹配关卡' : '暂无关卡'}
+                    {searchKeyword.trim() ? '无匹配游戏' : '暂无游戏'}
                   </div>
                 )}
               </div>

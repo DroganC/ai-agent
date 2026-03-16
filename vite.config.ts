@@ -9,12 +9,12 @@ import { BASE_PATH_PLACEHOLDER, IS_PRODUCTION } from './build-config';
  *   - 开发 / 非 production：不设则默认为 '/'。
  *   - production 构建且未设 VITE_BASE：使用 build-config 中的 BASE_PATH_PLACEHOLDER，供部署时 shell 脚本替换。
  */
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode: _mode }) => ({
   plugins: [react()],
   base:
     IS_PRODUCTION
-      ? (process.env.VITE_BASE ?? BASE_PATH_PLACEHOLDER)
-      : (process.env.VITE_BASE ?? '/'),
+      ? (BASE_PATH_PLACEHOLDER)
+      : ('/'),
   css: {
     devSourcemap: true,
   },

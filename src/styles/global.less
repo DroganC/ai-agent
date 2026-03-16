@@ -285,7 +285,7 @@ button {
   flex-wrap: wrap;
 }
 
-/* ===== 场景与关卡页：柔和布局与卡片列表 ===== */
+/* ===== 场景与游戏列表页：柔和布局与卡片列表 ===== */
 .levels-page {
   padding-bottom: var(--space-6);
 }
@@ -368,7 +368,7 @@ button {
   color: var(--color-text-muted);
 }
 
-/* ===== 排行榜页：与关卡列表统一的圆角与间距 ===== */
+/* ===== 排行榜页：与游戏列表统一的圆角与间距 ===== */
 .rank-page {
   padding-bottom: var(--space-6);
 }
@@ -475,7 +475,7 @@ button {
   gap: var(--space-1);
 }
 
-/* 关卡卡片：层次清晰、留白舒适、易于点击 */
+/* 游戏卡片：层次清晰、留白舒适、易于点击 */
 .level-card {
   background: var(--color-card);
   border-radius: var(--radius-lg);
@@ -525,7 +525,7 @@ button {
   flex-wrap: wrap;
   align-items: center;
   gap: 0 var(--space-2);
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
   font-size: var(--font-caption);
   color: var(--color-text-muted);
 }
@@ -541,15 +541,20 @@ button {
   flex-shrink: 0;
 }
 .level-card__footer {
-  margin-top: 0;
+  margin-top: var(--space-2);
+  margin-bottom: 0;
 }
 .level-card__footer .adm-button {
-  min-height: var(--btn-primary-height);
-  border-radius: var(--radius-btn);
+  min-height: var(--btn-secondary-height);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-4px) !important;
+  font-size: var(--font-body);
+  font-weight: 600;
 }
 .level-card__btn-inner {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-1);
 }
 
@@ -710,4 +715,60 @@ button {
 }
 .game-intro__btn-wrap .adm-button {
   width: 100%;
+}
+
+/* ===== 结算页 - 错误题目列表 ===== */
+.settlement-errors__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.settlement-errors__item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-3);
+  border-radius: var(--radius-card);
+  background: var(--color-bg);
+  border: 1px solid var(--wire-soft);
+  min-height: 0;
+}
+.settlement-errors__content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.settlement-errors__step {
+  font-size: var(--font-body);
+  font-weight: 500;
+  color: var(--color-text);
+  line-height: 1.4;
+}
+.settlement-errors__tip {
+  font-size: var(--font-caption);
+  margin-top: 0;
+}
+.settlement-errors__badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: 999px;
+  font-size: var(--font-caption);
+  font-weight: 500;
+}
+.settlement-errors__badge--ok {
+  color: var(--color-success);
+  background: rgba(22, 163, 74, 0.1);
+}
+.settlement-errors__badge--error {
+  color: var(--color-danger);
+  background: rgba(255, 77, 79, 0.08);
 }

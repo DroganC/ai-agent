@@ -6,7 +6,7 @@ import type { GameRenderProps } from '../renderGame';
 
 /**
  * 闯关类玩法（占位真实游戏组件）
- * 这里先做一个最小骨架，后续可扩展关卡状态机、地图/关卡选择、关卡内玩法等。
+ * 这里先做一个最小骨架，后续可扩展游戏状态机、地图/关卡选择、玩法等。
  */
 export default function ChallengeGame({ level, onExit }: GameRenderProps) {
   return (

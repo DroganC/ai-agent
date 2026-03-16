@@ -3,15 +3,15 @@ import { Icon } from '../../../icons';
 import type { Level } from '../../../types/api';
 
 export type LevelCardProps = {
-  /** 关卡数据 */
+  /** 游戏（关卡）数据 */
   level: Level;
-  /** 点击卡片时回调，参数为关卡 id */
+  /** 点击卡片时回调，参数为游戏 id */
   onClick: (levelId: number) => void;
 };
 
 /**
- * 首页单个关卡/游戏入口卡片
- * 展示名称、积分、预计时长、解锁状态，点击跳转游戏首页
+ * 首页单个游戏入口卡片
+ * 展示名称、积分、预计时长、解锁状态，点击跳转游戏准备页
  */
 export function LevelCard({ level, onClick }: LevelCardProps) {
   return (

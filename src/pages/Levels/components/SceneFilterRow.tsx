@@ -15,7 +15,7 @@ export type SceneFilterRowProps = {
 };
 
 /**
- * 关卡列表 - 场景分类筛选：横向滚动的场景 Tag，含「全部」
+ * 游戏列表 - 场景分类筛选：横向滚动的场景 Tag，含「全部」
  */
 export function SceneFilterRow({
   scenes,
