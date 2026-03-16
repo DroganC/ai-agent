@@ -655,6 +655,20 @@ button {
   gap: var(--space-3);
   margin-bottom: var(--space-2);
 }
+
+/* 所有使用 PageHeader 的页面：头部吸顶，不随滚动被遮挡 */
+.page-header-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--color-bg);
+  padding-top: env(safe-area-inset-top, 0);
+  margin-left: calc(-1 * var(--page-padding));
+  margin-right: calc(-1 * var(--page-padding));
+  padding-left: var(--page-padding);
+  padding-right: var(--page-padding);
+  border-bottom: 1px solid var(--wire-soft);
+}
 /** 右侧操作区（如积分商城的「记录」按钮），与标题首行垂直居中 */
 .game-intro__head-right {
   flex-shrink: 0;
@@ -706,8 +720,8 @@ button {
   padding: var(--space-4);
   padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
   background: var(--color-bg);
-  border-top: var(--hairline);
-  box-shadow: 0 -4px 12px rgba(17, 24, 39, 0.06);
+  border-top: 1px solid var(--wire-soft);
+  /* 仅用细线分隔，避免向上阴影遮挡上方滚动内容 */
 }
 .game-intro__btn-wrap {
   flex: 1;
@@ -715,6 +729,16 @@ button {
 }
 .game-intro__btn-wrap .adm-button {
   width: 100%;
+}
+
+/* 通关页知识卡片垂直列表（大家来找茬、分类、步骤等，非连连看） */
+.level-pass-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.level-pass-cards-list .level-pass-card.adm-card {
+  box-shadow: var(--shadow-1);
 }
 
 /* ===== 结算页 - 错误题目列表 ===== */

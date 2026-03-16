@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Card, Swiper } from 'antd-mobile';
 import { useBackToLevels } from '../../app/useBackToLevels';
 import type { GameType, Level, PlayRouteState } from '../../types/api';
 import { fetchLevel } from '../../services/levels';
 import { getErrorMessage } from '../../utils/error';
 import { Loading } from '../../components/common/Loading';
 import { ErrorView } from '../../components/common/ErrorView';
-import { LevelPassView, type PassCard } from '../../components/common/LevelPassView';
+import { LevelResultLayout } from '../../components/common/LevelResultLayout';
+import type { PassCard } from '../../components/common/LevelPassView';
+import { Icon } from '../../icons';
 import { TYPES } from '../../components/games/link-match/types';
 import co2Icon from '../../components/games/link-match/assets/co2.png';
 import dryPowderIcon from '../../components/games/link-match/assets/dry-powder.png';
@@ -72,6 +75,12 @@ export function LevelPass() {
         { id: 's2', title: '用时加成', description: '在保证正确的前提下加快节奏，可获得时间加成。' },
       ];
     }
+    if (gameType === 'spot-difference') {
+      return [
+        { id: 'sd1', title: '观察技巧', description: '上下对照，先看整体再盯细节，可减少误点。' },
+        { id: 'sd2', title: '复盘建议', description: '错点过多时别慌，记下差异位置再玩一局。' },
+      ];
+    }
     return [];
   }, [gameType]);
 
@@ -79,7 +88,6 @@ export function LevelPass() {
 
   const onReplay = useCallback(() => {
     if (!Number.isFinite(levelId)) return;
-    // 重新从准备页进入，保证会重新创建 attempt
     navigate(`/level/${levelId}/prepare`, { replace: true });
   }, [levelId, navigate]);
 
@@ -87,14 +95,91 @@ export function LevelPass() {
   if (error != null) return <ErrorView message={error} onRetry={load} />;
   if (level == null) return <ErrorView message="游戏不存在" onRetry={load} />;
 
+  const subtitle = attemptId != null ? '成绩已记录' : '成绩已记录';
+  const hasCards = Array.isArray(cards) && cards.length > 0;
+  /** 仅连连看使用左右滑动 Swiper（多张带图卡片）；大家来找茬、分类、步骤等用垂直列表 */
+  const useSwiper = gameType === 'link-match' || gameType === 'llk';
+
   return (
-    <LevelPassView
+    <LevelResultLayout
       title="挑战成功"
-      subtitle={attemptId != null ? `成绩已记录 · attemptId ${attemptId}` : '成绩已记录'}
-      cards={cards}
+      description={subtitle}
       onBackToLevels={onBackToLevels}
       onReplay={onReplay}
-    />
+    >
+      <Card style={{ borderRadius: 'var(--radius-card)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-2)', textAlign: 'center' }}>
+          <div
+            style={{
+              width: 72,
+              height: 72,
+              borderRadius: 999,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'rgba(16,185,129,.14)',
+              color: 'rgb(16,185,129)',
+            }}
+          >
+            <Icon name="success" size={40} weight="fill" />
+          </div>
+          <div style={{ fontSize: 'var(--font-h2)', fontWeight: 900, color: 'var(--color-text)' }}>挑战成功</div>
+          <div style={{ fontSize: 'var(--font-body)', color: 'var(--color-text-muted)' }}>{subtitle}</div>
+        </div>
+      </Card>
+      {hasCards && (
+        <div>
+          <div className="sectionTitle">知识卡片</div>
+          {useSwiper ? (
+            <Swiper
+              indicator={() => null}
+              style={{ '--height': '200px' } as never}
+              defaultIndex={0}
+              loop
+            >
+              {cards.map((c) => (
+                <Swiper.Item key={c.id}>
+                  <Card style={{ borderRadius: 'var(--radius-card)' }}>
+                    <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center' }}>
+                      {c.media && <div style={{ width: 68, height: 68, flex: '0 0 auto', display: 'grid', placeItems: 'center' }}>{c.media}</div>}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 'var(--font-body)', fontWeight: 900, color: 'var(--color-text)' }}>{c.title}</div>
+                        {c.description && (
+                          <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-body)', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
+                            {c.description}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="subtle" style={{ marginTop: 'var(--space-3)' }}>
+                      左右滑动切换
+                    </div>
+                  </Card>
+                </Swiper.Item>
+              ))}
+            </Swiper>
+          ) : (
+            <div className="level-pass-cards-list">
+              {cards.map((c) => (
+                <Card key={c.id} style={{ borderRadius: 'var(--radius-card)' }} className="level-pass-card">
+                  <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'flex-start' }}>
+                    {c.media && <div style={{ width: 48, height: 48, flex: '0 0 auto', display: 'grid', placeItems: 'center' }}>{c.media}</div>}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 'var(--font-body)', fontWeight: 900, color: 'var(--color-text)' }}>{c.title}</div>
+                      {c.description && (
+                        <div style={{ marginTop: 'var(--space-2)', fontSize: 'var(--font-body)', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
+                          {c.description}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </LevelResultLayout>
   );
 }
 

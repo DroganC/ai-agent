@@ -8,6 +8,7 @@ const QuizGame = lazy(() => import('./quiz/QuizGame')); // 答题类
 const LinkMatchGame = lazy(() => import('./link-match/LinkMatchGame')); // 连连看（消防器材识别）
 const ChallengeGame = lazy(() => import('./challenge/ChallengeGame')); // 闯关/挑战类
 const ClassifyChallengeGame = lazy(() => import('./classify-challenge/ClassifyChallengeGame')); // 分类大挑战（左右滑动归类）
+const SpotDifferenceGame = lazy(() => import('./spot-difference/SpotDifferenceGame')); // 大家来找茬（上下两图）
 
 export type GameRenderProps = {
   /** 游戏（关卡）数据，可用于名称、奖励、计时等 */
@@ -25,6 +26,7 @@ export type GameRenderProps = {
  * - link-match / llk：连连看（消防器材识别）
  * - challenge：闯关/挑战类
  * - classify-challenge：分类大挑战（左右滑动归类）
+ * - spot-difference：大家来找茬（上下两图）
  *
  * 约束：
  * - 所有游戏组件都必须支持 GameRenderProps
@@ -44,6 +46,8 @@ export function renderGame(type: GameType, props: GameRenderProps) {
         return <ChallengeGame {...props} />;
       case 'classify-challenge':
         return <ClassifyChallengeGame {...props} />;
+      case 'spot-difference':
+        return <SpotDifferenceGame {...props} />;
       default: {
         // GameType 已限制取值；这里作为运行时兜底，默认渲染连连看
         return <LinkMatchGame {...props} />;

@@ -29,6 +29,7 @@ export const levels: Level[] = [
   { id: 104, module_id: 11, game_type: 'classify-challenge', name: '分类大挑战：左右滑动归类', difficulty: 2, unlock_prev_level_id: 103, estimated_seconds: 120, reward_points: 40, status: 1, unlocked: true },
   { id: 201, module_id: 12, game_type: 'steps', name: '灭火器“四步法”（提、拔、握、压）', difficulty: 3, unlock_prev_level_id: null, estimated_seconds: 180, reward_points: 45, status: 1, unlocked: true },
   { id: 301, module_id: 21, game_type: 'challenge', name: '办公室隐患排查（电器/通道）', difficulty: 3, unlock_prev_level_id: null, estimated_seconds: 200, reward_points: 50, status: 1, unlocked: true },
+  { id: 302, module_id: 21, game_type: 'spot-difference', name: '大家来找茬', difficulty: 2, unlock_prev_level_id: 301, estimated_seconds: 120, reward_points: 40, status: 1, unlocked: true },
 ];
 
 export const leaderboard: LeaderboardItem[] = Array.from({ length: 15 }).map((_, idx) => ({

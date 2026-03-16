@@ -16,11 +16,12 @@ export type PageHeaderProps = {
 /**
  * 二级页通用头部组件
  * 使用与 level prepare 相同的 game-intro__head 结构，保证所有二级页头部样式一致：
- * 左侧返回 icon，中间大标题 + 描述，可选右侧操作区
+ * 左侧返回 icon，中间大标题 + 描述，可选右侧操作区。
+ * 带 page-header-sticky 吸顶，随页面滚动时固定在顶部不被遮挡。
  */
 export function PageHeader({ title, description, onBack, right }: PageHeaderProps) {
   return (
-    <div className="game-intro__head">
+    <div className="game-intro__head page-header-sticky">
       {onBack != null ? (
         <button
           type="button"
