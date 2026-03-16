@@ -31,7 +31,6 @@ export type GameRenderProps = {
  * - 必须通过 react.lazy 动态引入
  */
 export function renderGame(type: GameType, props: GameRenderProps) {
-  console.log('renderGame', type, props);
   const element = (() => {
     switch (type) {
       case 'steps':

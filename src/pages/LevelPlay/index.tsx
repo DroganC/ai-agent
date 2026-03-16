@@ -85,6 +85,7 @@ export function LevelPlay() {
     if (level == null) return;
     if (level.game_type != null) return;
     if (attemptId != null) return;
+    if (id == null) return;
     navigate(`/level/${id}/prepare`, { replace: true });
   }, [attemptId, id, level, levelError, levelLoading, navigate]);
 

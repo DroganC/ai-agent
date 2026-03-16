@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { exchangeComeCode } from '../../services/auth';
 import { Loading } from '../../components/common/Loading';
@@ -16,14 +16,22 @@ export function LoginCallback() {
   const navigate = useNavigate();
   const location = useLocation();
   const code: string = search.get('code') ?? 'mock-code';
+  const isMountedRef = useRef(true);
 
   useEffect(() => {
+    isMountedRef.current = true;
     exchangeComeCode(code)
       .then(() => {
+        if (!isMountedRef.current) return;
         const from: string = (location.state as LoginRouteState | null)?.from ?? '/home';
         navigate(from, { replace: true });
       })
-      .catch((err: unknown) => setError(getErrorMessage(err, '认证服务异常，请稍后重试')));
+      .catch((err: unknown) => {
+        if (isMountedRef.current) setError(getErrorMessage(err, '认证服务异常，请稍后重试'));
+      });
+    return () => {
+      isMountedRef.current = false;
+    };
   }, [code, navigate, location.state]);
 
   if (error) return <ErrorView message={error} onRetry={() => window.location.reload()} />;

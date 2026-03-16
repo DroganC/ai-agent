@@ -2,10 +2,9 @@ import axios, { AxiosError, AxiosHeaders } from 'axios';
 import { runInAction } from 'mobx';
 import { storeRef } from '../stores/storeRef.js';
 import { getAxiosApiError } from '../utils/error';
+import { DEPLOY_CONFIG } from '../utils/configure';
 
-const API_BASE = import.meta.env.VITE_API_BASE || '/api/v1';
-
-export const http = axios.create({ baseURL: API_BASE });
+export const http = axios.create({ baseURL: DEPLOY_CONFIG.API_BASE });
 
 http.interceptors.request.use((config) => {
   const token = storeRef?.authStore.token;

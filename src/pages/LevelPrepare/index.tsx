@@ -32,7 +32,11 @@ export function LevelPrepare() {
 
   /** 拉取关卡详情与当前生命值 */
   const load = useCallback(async (): Promise<void> => {
-    if (!Number.isFinite(levelId)) return;
+    if (!Number.isFinite(levelId)) {
+      setLoading(false);
+      setError('无效的关卡 ID');
+      return;
+    }
     try {
       setLoading(true);
       const [lv, lifeInfo] = await Promise.all([fetchLevel(levelId), fetchLife()]);

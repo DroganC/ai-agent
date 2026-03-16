@@ -15,10 +15,12 @@ import { StoreOrders } from '../pages/StoreOrders';
 import { Learning } from '../pages/Learning';
 import { TabLayout } from './TabLayout';
 import { RedirectGameToLevelPrepare } from './RedirectGameToLevelPrepare';
+import { DEPLOY_CONFIG } from '../utils/configure';
 
 /** 页面已解耦为每页独立目录，入口为各目录下的 index.tsx；页面内可包含 components 子目录 */
 
-export const router = createBrowserRouter([
+export const router = createBrowserRouter(
+  [
   { path: '/login-callback', element: <LoginCallback /> },
 
   // Backward compatible redirects
@@ -59,5 +61,7 @@ export const router = createBrowserRouter([
       { path: '*', element: <Navigate to="/home" replace /> },
     ],
   },
-]);
+  ],
+  { basename: DEPLOY_CONFIG.BASENAME || undefined }
+);
 

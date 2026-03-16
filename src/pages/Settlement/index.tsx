@@ -44,10 +44,14 @@ export function Settlement() {
   }, [attemptId]);
 
   const goPrepare = useCallback((): void => {
-    navigate(`/level/${id}/prepare`, { replace: true });
+    if (id != null) {
+      navigate(`/level/${id}/prepare`, { replace: true });
+    } else {
+      navigate('/levels', { replace: true });
+    }
   }, [id, navigate]);
 
-  if (attemptId == null) return <ErrorView message="缺少 attemptId" onRetry={goPrepare} />;
+  if (attemptId == null) return <ErrorView message="缺少 attemptId，请从关卡准备页开始" onRetry={() => navigate(id != null ? `/level/${id}/prepare` : '/levels', { replace: true })} />;
   if (loading) return <Loading />;
   if (error) return <ErrorView message={error} onRetry={() => navigate(0)} />;
 
@@ -68,7 +72,7 @@ export function Settlement() {
             <List style={{ '--border-inner': 'none' } as never}>
               {data?.timeline?.map((item: AttemptReviewTimelineItem, idx: number) => (
                 <List.Item
-                  key={idx}
+                  key={`${item.ts}-${idx}`}
                   extra={
                     <Tag color={item.result === 'ok' ? 'success' : 'danger'} fill="outline">
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)' }}>
@@ -86,7 +90,7 @@ export function Settlement() {
         </div>
 
         <Space direction="horizontal" block>
-          <Button full onClick={() => navigate(`/level/${id}/prepare`, { replace: true })}>
+          <Button full onClick={goPrepare}>
             再来一次
           </Button>
           <Button full variant="secondary" onClick={() => navigate('/levels')}>
