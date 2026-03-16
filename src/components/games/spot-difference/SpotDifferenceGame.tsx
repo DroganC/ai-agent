@@ -263,8 +263,8 @@ export default function SpotDifferenceGame({ level, onExit }: GameRenderProps) {
           makeSummary({
             levelId: config.id,
             total,
-            found: foundIds.size,
-            wrongClicks,
+            found: foundIdsRef.current.size,
+            wrongClicks: wrongClicksRef.current,
             durationMs,
             status: 'aborted',
             failReason: 'manual_abort',
@@ -272,7 +272,7 @@ export default function SpotDifferenceGame({ level, onExit }: GameRenderProps) {
         );
       },
     });
-  }, [config.id, endGame, foundIds.size, total, wrongClicks]);
+  }, [config.id, endGame, total]);
 
   const foundCount = foundIds.size;
   const showTimer = config.totalSeconds != null && config.totalSeconds > 0;

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Card, Swiper } from 'antd-mobile';
 import { useBackToLevels } from '../../app/useBackToLevels';
-import type { GameType, Level, PlayRouteState } from '../../types/api';
+import type { GameType, Level } from '../../types/api';
 import { fetchLevel } from '../../services/levels';
 import { getErrorMessage } from '../../utils/error';
 import { Loading } from '../../components/common/Loading';
@@ -21,8 +21,6 @@ const TYPE_ICONS = [co2Icon, dryPowderIcon, waterBasedIcon, foamIcon] as const;
 export function LevelPass() {
   const { id } = useParams<{ id: string }>();
   const levelId = id != null ? Number(id) : NaN;
-  const { state } = useLocation();
-  const attemptId: number | undefined = (state as PlayRouteState | null)?.attemptId;
   const navigate = useNavigate();
 
   const [level, setLevel] = useState<Level | null>(null);
@@ -95,7 +93,7 @@ export function LevelPass() {
   if (error != null) return <ErrorView message={error} onRetry={load} />;
   if (level == null) return <ErrorView message="游戏不存在" onRetry={load} />;
 
-  const subtitle = attemptId != null ? '成绩已记录' : '成绩已记录';
+  const subtitle = '成绩已记录';
   const hasCards = Array.isArray(cards) && cards.length > 0;
   /** 仅连连看使用左右滑动 Swiper（多张带图卡片）；大家来找茬、分类、步骤等用垂直列表 */
   const useSwiper = gameType === 'link-match' || gameType === 'llk';
