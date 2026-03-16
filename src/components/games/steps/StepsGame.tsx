@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Card, Modal, Space, Toast } from 'antd-mobile';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Page } from '../../common/Page';
+import { PageHeader } from '../../common/PageHeader';
 import { Button } from '../../common/Button';
 import { Icon } from '../../../icons';
 import type { GameRenderProps } from '../renderGame';
+import type { PlayRouteState } from '../../../types/api';
+import { settleAttempt } from '../../../services/attempts';
 
 /** 步骤类玩法：单步配置（示例） */
 type Step = { id: string; title: string; points: number; isKey?: boolean };
@@ -21,6 +25,11 @@ const defaultSteps: Step[] = [
  * - 最后弹窗展示结算信息，然后触发 onExit 交由页面处理跳转
  */
 export default function StepsGame({ level, onExit }: GameRenderProps) {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const attemptId: number | undefined = (state as PlayRouteState | null)?.attemptId;
+
   const [stepIdx, setStepIdx] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
   const [errors, setErrors] = useState<number>(0);
@@ -41,6 +50,24 @@ export default function StepsGame({ level, onExit }: GameRenderProps) {
     const penalty = errors * 5 + keyErrors * 20;
     const timeBonus = Math.max(0, 20 - Math.floor(elapsed / 10));
     const finalScore = Math.max(0, base - penalty + timeBonus);
+
+    if (attemptId != null) {
+      try {
+        await settleAttempt(attemptId, {
+          status: 'passed',
+          duration_ms: elapsed * 1000,
+          score: finalScore,
+          error_count: errors,
+          key_error_count: keyErrors,
+        });
+        if (id != null) {
+          navigate(`/level/${id}/pass`, { replace: true, state: { attemptId } });
+          return;
+        }
+      } catch {
+        // ignore: 继续走本地弹窗
+      }
+    }
 
     await Modal.alert({
       title: '本局结算',
@@ -79,25 +106,11 @@ export default function StepsGame({ level, onExit }: GameRenderProps) {
   return (
     <Page showTab={false}>
       <Space direction="vertical" block style={{ padding: 'var(--page-padding) var(--page-padding) 0', gap: 'var(--space-3)' }}>
-        <div className="row">
-          <button
-            type="button"
-            onClick={onExit}
-            className="actionPill"
-            style={{ padding: 0, width: '0.84rem', height: '0.84rem', justifyContent: 'center' }}
-            aria-label="退出"
-          >
-            <span style={{ display: 'inline-flex', transform: 'rotate(180deg)' }}>
-              <Icon name="caretRight" size={18} weight="bold" />
-            </span>
-          </button>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: 'var(--font-h3)', fontWeight: 900, color: 'var(--color-text)' }}>{level.name}</div>
-            <div className="subtle" style={{ marginTop: 'var(--space-1)' }}>
-              用时 {elapsed}s · 当前积分 {score}
-            </div>
-          </div>
-        </div>
+        <PageHeader
+          title={level.name}
+          description={`用时 ${elapsed}s · 当前积分 ${score}`}
+          onBack={onExit}
+        />
 
         <Card style={{ borderRadius: 'var(--radius-card)' }}>
           <div>

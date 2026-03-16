@@ -9,6 +9,7 @@ import { Levels } from '../pages/Levels';
 import { LevelPrepare } from '../pages/LevelPrepare';
 import { LevelPlay } from '../pages/LevelPlay';
 import { Settlement } from '../pages/Settlement';
+import { LevelPass } from '../pages/LevelPass';
 import { Store } from '../pages/Store';
 import { StoreOrders } from '../pages/StoreOrders';
 import { Learning } from '../pages/Learning';
@@ -49,6 +50,7 @@ export const router = createBrowserRouter([
       { path: 'levels', element: <Levels /> },
       { path: 'level/:id/prepare', element: <LevelPrepare /> },
       { path: 'level/:id/play', element: <LevelPlay /> },
+      { path: 'level/:id/pass', element: <LevelPass /> },
       { path: 'level/:id/settlement', element: <Settlement /> },
       { path: 'store', element: <Store /> },
       { path: 'store/orders', element: <StoreOrders /> },

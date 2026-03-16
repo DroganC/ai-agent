@@ -1,15 +1,21 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { sendEvents, settleAttempt } from '../../services/attempts';
+import { fetchLevel } from '../../services/levels';
 import { Page } from '../../components/common/Page';
+import { PageHeader } from '../../components/common/PageHeader';
+import { Loading } from '../../components/common/Loading';
+import { ErrorView } from '../../components/common/ErrorView';
 import { useStores } from '../../stores';
 import { Icon } from '../../icons';
 import { Button } from '../../components/common/Button';
+import { renderGame } from '../../components/games';
 import type { AttemptEvent, AttemptStatus, PlayRouteState } from '../../types/api';
+import type { Level } from '../../types/api';
 import { getErrorMessage } from '../../utils/error';
 import { Card, Space } from 'antd-mobile';
 
-/** 当前关卡步骤配置 */
+/** 当前关卡步骤配置（无 game_type 时的默认步骤 demo） */
 const steps: ReadonlyArray<{ id: string; title: string }> = [
   { id: 'step1', title: '检查安全帽' },
   { id: 'step2', title: '佩戴护目镜' },
@@ -18,7 +24,8 @@ const steps: ReadonlyArray<{ id: string; title: string }> = [
 
 /**
  * 关卡游戏内页
- * 从准备页传入 attemptId，按步骤选择正确/错误，完成后上报并跳转结算页
+ * - 若关卡配置了 game_type，按类型渲染对应游戏（如 link-match/llk 连连看），退出回到准备页
+ * - 否则按步骤 demo 流程，从准备页传入 attemptId，完成后上报并跳转结算页
  */
 export function LevelPlay() {
   const { id } = useParams<{ id: string }>();
@@ -27,25 +34,59 @@ export function LevelPlay() {
   const navigate = useNavigate();
   const { uiStore } = useStores();
 
+  const [level, setLevel] = useState<Level | null>(null);
+  const [levelLoading, setLevelLoading] = useState<boolean>(true);
+  const [levelError, setLevelError] = useState<string | null>(null);
+
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [errors, setErrors] = useState<number>(0);
   const [keyErrors, setKeyErrors] = useState<number>(0);
   const [tick, setTick] = useState<number>(0);
   const [startAt] = useState<number>(() => Date.now());
 
-  /** 无 attemptId 时重定向到准备页（或关卡列表） */
-  useEffect(() => {
-    if (attemptId == null) {
-      if (id) navigate(`/level/${id}/prepare`, { replace: true });
-      else navigate('/levels', { replace: true });
+  const levelId = id != null ? Number(id) : NaN;
+
+  /** 拉取关卡详情，用于判断 game_type */
+  const loadLevel = useCallback(async (): Promise<void> => {
+    if (!Number.isFinite(levelId)) {
+      setLevelLoading(false);
+      return;
     }
-  }, [attemptId, id, navigate]);
+    try {
+      setLevelLoading(true);
+      setLevelError(null);
+      const lv = await fetchLevel(levelId);
+      setLevel(lv);
+    } catch (e: unknown) {
+      setLevelError(getErrorMessage(e, '加载关卡失败'));
+      setLevel(null);
+    } finally {
+      setLevelLoading(false);
+    }
+  }, [levelId]);
+
+  useEffect(() => {
+    void loadLevel();
+  }, [loadLevel]);
 
   /** 每秒更新计时 */
   useEffect(() => {
-    const t = setInterval(() => setTick((v) => v + 1), 1000);
-    return () => clearInterval(t);
-  }, []);
+    // 仅在“无 game_type 的步骤 demo 流程”里计时
+    if (level?.game_type != null) return;
+    if (attemptId == null) return;
+    const t = window.setInterval(() => setTick((v) => v + 1), 1000);
+    return () => window.clearInterval(t);
+  }, [attemptId, level?.game_type]);
+
+  /** 无 game_type 且 attemptId 缺失时，回到准备页（避免在 render 阶段 navigate） */
+  useEffect(() => {
+    if (levelLoading) return;
+    if (levelError != null) return;
+    if (level == null) return;
+    if (level.game_type != null) return;
+    if (attemptId != null) return;
+    navigate(`/level/${id}/prepare`, { replace: true });
+  }, [attemptId, id, level, levelError, levelLoading, navigate]);
 
   /** 记录一次错误（可选关键错误） */
   const handleError = useCallback((isKey = false): void => {
@@ -93,23 +134,27 @@ export function LevelPlay() {
     [currentStep, keyErrors, handleError, handleComplete]
   );
 
+  /** 有 game_type 时使用游戏容器渲染；退出回到准备页 */
+  if (!levelLoading && levelError == null && level != null && level.game_type != null) {
+    return renderGame(level.game_type, {
+      level,
+      onExit: () => navigate(`/level/${id}/prepare`, { replace: true }),
+    });
+  }
+
+  if (levelLoading) return <Loading />;
+  if (levelError != null) return <ErrorView message={levelError} onRetry={loadLevel} />;
+  if (level == null) return <ErrorView message="关卡不存在" onRetry={loadLevel} />;
+
+  /** 以下为无 game_type 时的步骤 demo 流程，需 attemptId；缺失时回到准备页 */
+  if (attemptId == null) {
+    return <Loading />;
+  }
+
   return (
     <Page showTab={false}>
       <div style={{ padding: 'var(--page-padding) var(--page-padding) 0', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-        <div className="row" style={{ marginBottom: 0 }}>
-          <button
-            type="button"
-            className="actionPill"
-            onClick={() => navigate(-1)}
-            style={{ padding: 0, width: '0.84rem', height: '0.84rem', justifyContent: 'center' }}
-            aria-label="返回"
-          >
-            <span style={{ display: 'inline-flex', transform: 'rotate(180deg)' }}>
-              <Icon name="caretRight" size={18} weight="bold" />
-            </span>
-          </button>
-          <div style={{ flex: 1 }} />
-        </div>
+        <PageHeader title={level.name} onBack={() => navigate(-1)} />
         <Card style={{ borderRadius: 'var(--radius-card)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>

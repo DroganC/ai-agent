@@ -5,6 +5,7 @@ import { fetchLife } from '../../services/life';
 import { createAttempt } from '../../services/attempts';
 import type { Level } from '../../types/api';
 import { Page } from '../../components/common/Page';
+import { PageHeader } from '../../components/common/PageHeader';
 import { Loading } from '../../components/common/Loading';
 import { ErrorView } from '../../components/common/ErrorView';
 import { PullToRefreshContainer } from '../../components/common/PullToRefreshContainer';
@@ -70,25 +71,11 @@ export function LevelPrepare() {
       <div className="game-intro">
         <PullToRefreshContainer onRefresh={load}>
           <div className="game-intro__scroll">
-            <div className="game-intro__head">
-              <button
-                type="button"
-                className="actionPill"
-                onClick={() => navigate(-1)}
-                style={{ padding: 0, width: '0.84rem', height: '0.84rem', justifyContent: 'center' }}
-                aria-label="返回"
-              >
-                <span style={{ display: 'inline-flex', transform: 'rotate(180deg)' }}>
-                  <Icon name="caretRight" size={18} weight="bold" />
-                </span>
-              </button>
-              <div className="game-intro__title-wrap">
-                <h1 className="game-intro__title">{level.name}</h1>
-                <div className="subtle" style={{ marginTop: 'var(--space-1)' }}>
-                  难度 {level.difficulty} ★ · 预计 {level.estimated_seconds ?? '--'}s · 奖励 {level.reward_points} 积分
-                </div>
-              </div>
-            </div>
+            <PageHeader
+              title={level.name}
+              description={`难度 ${level.difficulty} ★ · 预计 ${level.estimated_seconds ?? '--'}s · 奖励 ${level.reward_points} 积分`}
+              onBack={() => navigate(-1)}
+            />
 
             <div className="game-intro__block">
               <div className="sectionTitle">说明</div>
@@ -133,7 +120,7 @@ export function LevelPrepare() {
 
         <div className="game-intro__bottom">
           <div className="game-intro__btn-wrap">
-            <Button variant="secondary" full onClick={() => navigate('/levels')}>
+            <Button variant="secondary" full onClick={() => navigate(-1)}>
               返回列表
             </Button>
           </div>

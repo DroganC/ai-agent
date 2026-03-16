@@ -9,12 +9,16 @@ export const Button = ({
   full,
   onClick,
   disabled,
+  className,
+  style,
 }: {
   children: ReactNode;
   variant?: ButtonVariant;
   full?: boolean;
   onClick?: () => void;
   disabled?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
 }) => {
   const map: Record<ButtonVariant, { color?: 'primary'; fill?: 'solid' | 'outline' | 'none' }> = {
     primary: { color: 'primary', fill: 'solid' },
@@ -23,6 +27,8 @@ export const Button = ({
   };
   return (
     <AMButton
+      className={className}
+      style={style}
       onClick={onClick}
       disabled={disabled}
       block={full}

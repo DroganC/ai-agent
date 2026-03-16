@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { createOrder, fetchItems } from '../../services/store';
 import type { StoreItem } from '../../types/api';
 import { Page } from '../../components/common/Page';
+import { PageHeader } from '../../components/common/PageHeader';
 import { Loading } from '../../components/common/Loading';
 import { ErrorView } from '../../components/common/ErrorView';
 import { PullToRefreshContainer } from '../../components/common/PullToRefreshContainer';
@@ -65,27 +66,17 @@ export function Store() {
       <PullToRefreshContainer onRefresh={load}>
         <div className="screen">
           <div className="stack">
-          <div className="row">
-            <button
-              type="button"
-              className="actionPill"
-              onClick={() => navigate(-1)}
-              style={{ padding: 0, width: '0.84rem', height: '0.84rem', justifyContent: 'center' }}
-              aria-label="返回"
-            >
-              <span style={{ display: 'inline-flex', transform: 'rotate(180deg)' }}>
-                <Icon name="caretRight" size={18} weight="bold" />
-              </span>
-            </button>
-            <div style={{ flex: 1 }}>
-              <div className="title">积分商城</div>
-              <div className="subtle">使用积分兑换奖励（示例）</div>
-            </div>
-            <button type="button" className="actionPill" onClick={() => navigate('/store/orders')} aria-label="查看兑换记录">
-              <Icon name="bag" size={18} weight="bold" />
-              <span className="actionPillText">记录</span>
-            </button>
-          </div>
+          <PageHeader
+            title="积分商城"
+            description="使用积分兑换奖励（示例）"
+            onBack={() => navigate(-1)}
+            right={
+              <button type="button" className="actionPill" onClick={() => navigate('/store/orders')} aria-label="查看兑换记录">
+                <Icon name="bag" size={18} weight="bold" />
+                <span className="actionPillText">记录</span>
+              </button>
+            }
+          />
 
           <div>
             <div className="sectionTitle">商品列表</div>

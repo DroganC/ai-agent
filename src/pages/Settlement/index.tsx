@@ -2,6 +2,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
 import { fetchAttemptReview } from '../../services/attempts';
 import { Page } from '../../components/common/Page';
+import { PageHeader } from '../../components/common/PageHeader';
 import { Loading } from '../../components/common/Loading';
 import { ErrorView } from '../../components/common/ErrorView';
 import { Button } from '../../components/common/Button';
@@ -53,20 +54,7 @@ export function Settlement() {
   return (
     <Page showTab={false}>
       <div style={{ padding: 'var(--page-padding) var(--page-padding) 0', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-        <div className="row" style={{ marginBottom: 0 }}>
-          <button
-            type="button"
-            className="actionPill"
-            onClick={() => navigate(-1)}
-            style={{ padding: 0, width: '0.84rem', height: '0.84rem', justifyContent: 'center' }}
-            aria-label="返回"
-          >
-            <span style={{ display: 'inline-flex', transform: 'rotate(180deg)' }}>
-              <Icon name="caretRight" size={18} weight="bold" />
-            </span>
-          </button>
-          <div style={{ flex: 1 }} />
-        </div>
+        <PageHeader title="结算" onBack={() => navigate(-1)} />
         <Card style={{ borderRadius: 'var(--radius-card)' }}>
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: 'var(--font-h2)', fontWeight: 800, color: 'var(--adm-color-primary)' }}>结算完成</div>

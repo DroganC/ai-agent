@@ -59,7 +59,7 @@ export const Levels = observer(function Levels() {
           <div className="stack">
             <PageHeader
               title="关卡列表"
-              subtitle="搜索关卡名称"
+              description="搜索关卡名称"
               onBack={() => navigate(-1)}
             />
 

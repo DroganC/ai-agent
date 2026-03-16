@@ -1,0 +1,292 @@
+@import '../../../styles/variable.less';
+
+/* 灭火器连连看 - 游戏样式（与 level prepare 页内边距一致，不超出视口、不整体居中） */
+.link-match-game {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--page-padding);
+  padding-bottom: env(safe-area-inset-bottom);
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: var(--color-bg);
+}
+
+.link-match-game.screen {
+  justify-content: center;
+  text-align: center;
+}
+
+/* 与 global.less .title 一致：使用设计变量 */
+.link-match-title {
+  font-size: var(--font-h2);
+  font-weight: 900;
+  margin-bottom: var(--space-2);
+  color: var(--color-text);
+  line-height: var(--line-h);
+}
+
+.link-match-desc {
+  font-size: var(--font-caption);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin-bottom: var(--space-4);
+}
+
+.link-match-game.play {
+  justify-content: flex-start;
+  padding-bottom: calc(72px + env(safe-area-inset-bottom));
+}
+
+.link-match-grid {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  background: var(--color-bg);
+  border-radius: 12px;
+  border: 2px solid var(--wire-soft);
+  margin-bottom: 12px;
+  width: 100%;
+  min-width: 0;
+  max-height: 66.67vh;
+  align-content: start;
+  box-sizing: border-box;
+}
+
+@keyframes link-match-grid-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+.link-match-grid.link-match-grid-shake {
+  animation: link-match-grid-shake 0.22s ease-in-out;
+}
+
+.link-match-cell {
+  aspect-ratio: 1;
+  min-height: 0;
+  border-radius: 10px;
+  border: 2px solid var(--game-border-cell);
+  background: var(--color-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
+}
+
+.link-match-cell-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.link-match-cell.link-match-cell-matched {
+  transform: scale(0);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.32s ease-out, opacity 0.32s ease-out;
+}
+
+.link-match-cell:hover:not(.empty) {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 12px rgba(0, 100, 255, 0.2);
+}
+
+@keyframes link-match-cell-breathing {
+  0%, 100% {
+    transform: scale(1.03);
+    box-shadow: 0 0 12px rgba(0, 100, 255, 0.2), 0 0 0 0 rgba(0, 100, 255, 0.25);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(0, 100, 255, 0.2), 0 0 24px 2px rgba(0, 100, 255, 0.2);
+  }
+}
+
+.link-match-cell.selected {
+  border-color: var(--color-primary);
+  background: var(--game-accent-bg);
+  animation: link-match-cell-breathing 1.8s ease-in-out infinite;
+}
+
+.link-match-cell.hint {
+  border-color: var(--color-success);
+  box-shadow: 0 0 16px rgba(22, 163, 74, 0.3);
+}
+
+.link-match-cell.empty {
+  visibility: hidden;
+  cursor: default;
+  border-color: transparent;
+  background: transparent;
+}
+
+.link-match-game .link-match-btn-action {
+  min-width: 128px;
+  height: 48px;
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: 24px;
+}
+
+.link-match-game .adm-button.link-match-btn-action {
+  background: var(--color-primary) !important;
+  border: none !important;
+  color: #fff !important;
+}
+
+.link-match-game .adm-button.link-match-btn-action::before {
+  border: none;
+}
+
+.link-match-game .adm-button.link-match-btn-action:active {
+  opacity: 0.92;
+}
+
+/* 底部操作：紧凑游戏风 */
+.link-match-actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 8px 16px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  background: var(--color-card);
+  border-top: 1px solid var(--wire-soft);
+  z-index: 40;
+  box-sizing: border-box;
+}
+
+.link-match-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 18px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.link-match-action-btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.link-match-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.link-match-action-btn--hint {
+  background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark, #0d6efd) 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(var(--color-primary-rgb, 13, 110, 253), 0.35);
+}
+
+.link-match-action-btn--hint:not(:disabled):hover {
+  box-shadow: 0 4px 12px rgba(var(--color-primary-rgb, 13, 110, 253), 0.4);
+}
+
+.link-match-action-btn--shuffle {
+  background: var(--color-card);
+  color: var(--color-text);
+  border: 1.5px solid var(--wire-soft);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.link-match-action-btn--shuffle:not(:disabled):hover {
+  background: var(--color-fill);
+  border-color: var(--wire);
+}
+
+/* 小知识区：限制高度与宽度，避免撑出页面 */
+.link-match-tip-area {
+  flex-shrink: 0;
+  min-height: 44px;
+  max-height: min(22vh, 140px);
+  width: 100%;
+  max-width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+}
+
+.link-match-tip-inline-placeholder {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.link-match-tip-inline {
+  width: 100%;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  .link-match-tip-inline-title {
+    font-weight: 600;
+    color: var(--color-success);
+    margin-bottom: 4px;
+    font-size: 14px;
+  }
+  .link-match-tip-inline-desc {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+}
+
+.link-match-game.link-match-game-busy .link-match-grid {
+  pointer-events: none;
+}
+
+.link-match-line-svg {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.link-match-line-svg path {
+  stroke: var(--game-link-line-stroke);
+  stroke-width: var(--game-link-line-width);
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+

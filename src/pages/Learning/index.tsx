@@ -56,7 +56,7 @@ export const Learning = observer(function Learning() {
           <div className="stack" style={{ gap: 'var(--space-3)' }}>
             <PageHeader
               title="学习中心"
-              subtitle="按分类查看并完成学习材料"
+              description="按分类查看并完成学习材料"
               onBack={() => navigate(-1)}
             />
 

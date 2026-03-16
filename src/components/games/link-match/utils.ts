@@ -1,0 +1,200 @@
+/**
+ * 连连看 - 路径与判定工具（可消除条件与连线规则）
+ */
+import type { Point } from './types';
+import { TOTAL_CELLS, GRID_FACTORS } from './types';
+
+/** 网格尺寸（列数 4 或 6，行数 = 48÷列数） */
+export interface GridSize {
+  cols: number;
+  rows: number;
+}
+
+/** 根据屏幕宽度计算列数，最多 6 列；行数 = 48/列数 */
+export function computeGridSize(): GridSize {
+  const minCell = 44;
+  const gap = 8;
+  const padding = 24;
+  const availW = typeof window !== 'undefined' ? window.innerWidth - padding : 400;
+  const maxCols = Math.floor(availW / (minCell + gap));
+  const valid = GRID_FACTORS.filter(
+    (f) => TOTAL_CELLS % f === 0 && f <= Math.min(6, Math.max(4, maxCols))
+  );
+  const cols = valid.length ? valid[valid.length - 1]! : 6;
+  const rows = TOTAL_CELLS / cols;
+  return { cols, rows };
+}
+
+/**
+ * 格子边界上一点，使该点到 toward 的连线为严格水平或竖直。
+ */
+export function getBoundaryPointAxisAligned(
+  getRect: (r: number, c: number) => DOMRect | null,
+  r: number,
+  c: number,
+  toward: Point
+): Point {
+  const rect = getRect(r, c);
+  if (!rect) return toward;
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const { x: tx, y: ty } = toward;
+
+  if (rect.top <= ty && ty <= rect.bottom) {
+    if (tx > cx) return { x: rect.right, y: ty };
+    if (tx < cx) return { x: rect.left, y: ty };
+  }
+  if (rect.left <= tx && tx <= rect.right) {
+    if (ty > cy) return { x: tx, y: rect.bottom };
+    if (ty < cy) return { x: tx, y: rect.top };
+  }
+  if (tx > cx) return { x: rect.right, y: ty <= rect.top ? rect.top : ty >= rect.bottom ? rect.bottom : cy };
+  if (tx < cx) return { x: rect.left, y: ty <= rect.top ? rect.top : ty >= rect.bottom ? rect.bottom : cy };
+  if (ty > cy) return { x: tx <= rect.left ? rect.left : tx >= rect.right ? rect.right : cx, y: rect.bottom };
+  if (ty < cy) return { x: tx <= rect.left ? rect.left : tx >= rect.right ? rect.right : cx, y: rect.top };
+  return { x: cx, y: cy };
+}
+
+/** 能否用直线或 L 形连接（无 Z 形，最多 1 拐；中间仅经过空格） */
+export function canConnect(
+  grid: number[][],
+  rows: number,
+  cols: number,
+  r1: number,
+  c1: number,
+  r2: number,
+  c2: number
+): boolean {
+  if (r1 === r2 && c1 === c2) return false;
+  if (r1 < 0 || r1 >= rows || c1 < 0 || c1 >= cols || r2 < 0 || r2 >= rows || c2 < 0 || c2 >= cols) return false;
+  const t1 = getType(grid, rows, cols, r1, c1);
+  const t2 = getType(grid, rows, cols, r2, c2);
+  if (t1 !== t2 || t1 === -1) return false;
+
+  const isEmpty = (r: number, c: number) => {
+    if (r < 0 || r >= rows || c < 0 || c >= cols) return true;
+    return grid[r]![c]! === -1;
+  };
+  const clearH = (r: number, cFrom: number, cTo: number) => {
+    const [cA, cB] = cFrom <= cTo ? [cFrom, cTo] : [cTo, cFrom];
+    for (let c = cA; c <= cB; c++)
+      if (
+        !isEmpty(r, c) &&
+        !(r === r1 && c === c1) &&
+        !(r === r2 && c === c2)
+      )
+        return false;
+    return true;
+  };
+  const clearV = (c: number, rFrom: number, rTo: number) => {
+    const [rA, rB] = rFrom <= rTo ? [rFrom, rTo] : [rTo, rFrom];
+    for (let r = rA; r <= rB; r++)
+      if (
+        !isEmpty(r, c) &&
+        !(r === r1 && c === c1) &&
+        !(r === r2 && c === c2)
+      )
+        return false;
+    return true;
+  };
+
+  if (Math.abs(r1 - r2) + Math.abs(c1 - c2) === 1) return true;
+  if (r1 === r2 && clearH(r1, c1, c2)) return true;
+  if (c1 === c2 && clearV(c1, r1, r2)) return true;
+  if (clearH(r1, c1, c2) && clearV(c2, r1, r2)) return true;
+  if (clearV(c1, r1, r2) && clearH(r2, c1, c2)) return true;
+  return false;
+}
+
+function getType(
+  grid: number[][],
+  rows: number,
+  cols: number,
+  r: number,
+  c: number
+): number {
+  if (r < 0 || r >= rows || c < 0 || c >= cols) return -1;
+  return grid[r]![c]!;
+}
+
+function createCachedGetRect(
+  getRect: (r: number, c: number) => DOMRect | null
+): (r: number, c: number) => DOMRect | null {
+  const cache = new Map<string, DOMRect | null>();
+  return (r: number, c: number) => {
+    const key = `${r}-${c}`;
+    if (!cache.has(key)) cache.set(key, getRect(r, c));
+    return cache.get(key)!;
+  };
+}
+
+/** 计算折线路径：直线或 L 形，起止点在格子边界且满足 90°。 */
+export function getPath(
+  grid: number[][],
+  rows: number,
+  cols: number,
+  getRect: (r: number, c: number) => DOMRect | null,
+  r1: number,
+  c1: number,
+  r2: number,
+  c2: number
+): Point[] {
+  const cachedGetRect = createCachedGetRect(getRect);
+  const isEmpty = (r: number, c: number) => {
+    if (r < 0 || r >= rows || c < 0 || c >= cols) return true;
+    return grid[r]![c]! === -1;
+  };
+  const clearH = (r: number, cFrom: number, cTo: number) => {
+    const [cA, cB] = cFrom <= cTo ? [cFrom, cTo] : [cTo, cFrom];
+    for (let c = cA; c <= cB; c++)
+      if (
+        !isEmpty(r, c) &&
+        !(r === r1 && c === c1) &&
+        !(r === r2 && c === c2)
+      )
+        return false;
+    return true;
+  };
+  const clearV = (c: number, rFrom: number, rTo: number) => {
+    const [rA, rB] = rFrom <= rTo ? [rFrom, rTo] : [rTo, rFrom];
+    for (let r = rA; r <= rB; r++)
+      if (
+        !isEmpty(r, c) &&
+        !(r === r1 && c === c1) &&
+        !(r === r2 && c === c2)
+      )
+        return false;
+    return true;
+  };
+  const toPx = (r: number, c: number): Point => {
+    const rect = cachedGetRect(r, c);
+    if (!rect) return { x: 0, y: 0 };
+    return {
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+    };
+  };
+
+  const center1 = toPx(r1, c1);
+  const center2 = toPx(r2, c2);
+  let path: Point[];
+  if (Math.abs(r1 - r2) + Math.abs(c1 - c2) === 1) {
+    path = [center1, center2];
+  } else if (r1 === r2 && clearH(r1, c1, c2)) {
+    path = [center1, center2];
+  } else if (c1 === c2 && clearV(c1, r1, r2)) {
+    path = [center1, center2];
+  } else if (clearH(r1, c1, c2) && clearV(c2, r1, r2)) {
+    path = [center1, toPx(r1, c2), center2];
+  } else if (clearV(c1, r1, r2) && clearH(r2, c1, c2)) {
+    path = [center1, toPx(r2, c1), center2];
+  } else {
+    path = [center1, center2];
+  }
+
+  const nextFromStart = path.length >= 2 ? path[1]! : center2;
+  path[0] = getBoundaryPointAxisAligned(cachedGetRect, r1, c1, nextFromStart);
+  const prevToEnd = path.length >= 2 ? path[path.length - 2]! : center1;
+  path[path.length - 1] = getBoundaryPointAxisAligned(cachedGetRect, r2, c2, prevToEnd);
+  return path;
+}

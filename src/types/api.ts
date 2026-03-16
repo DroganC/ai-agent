@@ -23,8 +23,8 @@ export type SceneCode = Scene['code'];
 
 export type LevelModule = { id: number; scene_id: number; name: string; order_no: number };
 
-/** 游戏类型（用于按玩法渲染不同真实游戏组件） */
-export type GameType = 'steps' | 'quiz' | 'link-match' | 'challenge';
+/** 游戏类型（用于按玩法渲染不同真实游戏组件）；'llk' 为连连看别名 */
+export type GameType = 'steps' | 'quiz' | 'link-match' | 'llk' | 'challenge' | 'classify-challenge';
 
 export type Level = {
   id: number;

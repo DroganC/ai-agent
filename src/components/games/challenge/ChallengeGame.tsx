@@ -1,5 +1,6 @@
 import { Card } from 'antd-mobile';
 import { Page } from '../../common/Page';
+import { PageHeader } from '../../common/PageHeader';
 import { Button } from '../../common/Button';
 import type { GameRenderProps } from '../renderGame';
 
@@ -12,8 +13,11 @@ export default function ChallengeGame({ level, onExit }: GameRenderProps) {
     <Page showTab={false}>
       <div className="screen">
         <div className="stack">
-          <div className="title">{level.name}</div>
-          <div className="subtle">玩法类型：闯关（开发中）</div>
+          <PageHeader
+            title={level.name}
+            description="玩法类型：闯关（开发中）"
+            onBack={onExit}
+          />
 
           <Card style={{ borderRadius: 'var(--radius-card)' }}>
             <div>

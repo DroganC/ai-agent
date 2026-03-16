@@ -42,7 +42,7 @@ export const BottomTab = observer(() => {
         onChange={(key) => {
           const next = key as TabKey;
           uiStore.setTab(next);
-          navigate(next);
+          navigate(next, { replace: true });
         }}
         style={{ '--adm-tab-bar-height': 'var(--tabbar-height)' } as never}
       >

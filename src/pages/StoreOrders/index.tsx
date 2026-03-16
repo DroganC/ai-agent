@@ -31,7 +31,7 @@ export const StoreOrders = observer(function StoreOrders() {
           <div className="stack" style={{ gap: 'var(--space-3)' }}>
             <PageHeader
             title="兑换记录"
-            subtitle="查看积分兑换历史"
+            description="查看积分兑换历史"
             onBack={() => navigate(-1)}
           />
 

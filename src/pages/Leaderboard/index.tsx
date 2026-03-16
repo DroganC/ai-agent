@@ -37,7 +37,7 @@ export const Leaderboard = observer(function Leaderboard() {
           <div className="stack">
             <PageHeader
               title="排行榜"
-              subtitle="按积分降序 · 同分按用时更短排前"
+              description="按积分降序 · 同分按用时更短排前"
             />
 
             <div className="rank-scope-block">
